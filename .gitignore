@@ -1,0 +1,4 @@
+sites
+word-rnn-tensorflow/
+.idea/
+__pycache__/
