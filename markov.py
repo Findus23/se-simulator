@@ -10,7 +10,8 @@ detokenizer = MosesDetokenizer()
 
 BASEDIR, mode = utils.get_settings(2)
 if mode not in ["Questions", "Answers", "Titles"]:
-    mode ="Titles"
+    print("error")
+    exit()
 chainfile = BASEDIR + '/{type}.chain.json'.format(type=mode)
 
 try:
@@ -28,7 +29,8 @@ except FileNotFoundError:
     i = 0
     with jsonlines.open(BASEDIR + "/{type}.jsonl".format(type=mode), mode="r") as content:
         for text in content:
-            tokens = tokenizer.tokenize(text=text.rstrip('\n'))
+            text = text.strip()
+            tokens = tokenizer.tokenize(text=text.replace("\n", " THISISANEWLINE "))
             chain = markovify.Chain([tokens], (1 if mode == "Titles" else 2))
             chainlist.append(chain)
             if i % 100 == 0:
@@ -53,7 +55,7 @@ for _ in range(10):
             break
         walk.append(text)
     result = detokenizer.detokenize(walk, return_str=True)
-    print(result)
+    print(result.replace("THISISANEWLINE ", "\n"))
     print("-----------------------------------")
 
 print("used {mb}MB".format(mb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss // 1024))

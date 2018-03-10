@@ -5,14 +5,10 @@ import jsonlines
 from html2text import HTML2Text
 
 import utils
+from bs4 import BeautifulSoup
 
 BASEDIR = utils.get_settings(1)
 
-h = HTML2Text()
-h.ignore_links = True
-h.unicode_snob = 1
-h.ignore_emphasis = True
-h.single_line_break = True
 i = 0
 iterator = ElementTree.iterparse(BASEDIR + "/Posts.xml")
 with jsonlines.open(BASEDIR + '/Questions.jsonl', mode="w") as questions, \
@@ -24,7 +20,8 @@ with jsonlines.open(BASEDIR + '/Questions.jsonl', mode="w") as questions, \
             titles.write(title)
         body = element.get('Body')
         if body:
-            text = h.handle(body)
+            soup = BeautifulSoup(body, "lxml")
+            text = soup.get_text()
             if element.get('PostTypeId') == "1":
                 questions.write(text)
             else:
