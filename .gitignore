@@ -2,3 +2,4 @@ sites
 word-rnn-tensorflow/
 .idea/
 __pycache__/
+config.py
