@@ -1,10 +1,6 @@
-import html
-from pprint import pprint
+from internetarchive import get_item, download
 
-import requests
-from urllib.parse import urlparse
 from models import *
-from internetarchive import get_item
 
 ignored_se_sites = ["cs50.stackexchange.com"]
 
@@ -22,6 +18,14 @@ for site in Site.select()[1:]:
         query = Alias.select(Alias.url).where(Alias.site == site).limit(1).offset(offset)
         if len(query) == 0:
             print("{site} ({url}) doesn't have a dump".format(site=site.name, url=site.url))
+            file = {}
             break
         key = query[0].url + ".7z"
         offset += 1
+    if file:
+        sizeMB = int(file["size"]) / 1024 / 1024
+        if sizeMB < 50:
+            print(file)
+            print(sizeMB)
+            download("stackexchange", files=file["name"], verbose=True)
+            exit()
