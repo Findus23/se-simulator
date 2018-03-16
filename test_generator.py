@@ -2,6 +2,7 @@ import resource
 
 import jsonlines
 import markovify
+from markov import POSifiedText
 from nltk.tokenize.moses import MosesDetokenizer, MosesTokenizer
 
 import utils
@@ -17,7 +18,7 @@ chainfile = BASEDIR + '/{type}.chain.json'.format(type=mode)
 try:
     with open(chainfile, 'r') as myfile:
         data = myfile.read()
-        chain = markovify.Chain.from_json(data)
+        chain = POSifiedText.from_json(data)
         # raise FileNotFoundError
         print("using existing file\n")
 
@@ -30,8 +31,12 @@ except FileNotFoundError:
     with jsonlines.open(BASEDIR + "/{type}.jsonl".format(type=mode), mode="r") as content:
         for text in content:
             text = text.strip()
-            tokens = tokenizer.tokenize(text=text.replace("\n", " THISISANEWLINE "))
-            chain = markovify.Chain([tokens], (1 if mode == "Titles" else 2))
+            # tokens = tokenizer.tokenize(text=text.replace("\n", " THISISANEWLINE "))
+            try:
+                chain = POSifiedText(text, (1 if mode == "Titles" else 2),retain_original=False)
+                # chain = markovify.Chain([tokens], (1 if mode == "Titles" else 2))
+            except KeyError:
+                continue
             chainlist.append(chain)
             if i % 100 == 0:
                 print(i)
@@ -49,13 +54,14 @@ except FileNotFoundError:
         outfile.write(chain.to_json())
 
 for _ in range(10):
-    walk = []
-    for text in chain.gen():
-        if len(walk) > 100:
-            break
-        walk.append(text)
-    result = detokenizer.detokenize(walk, return_str=True)
-    print(result.replace("THISISANEWLINE ", "\n"))
+    # walk = []
+    # for text in chain.gen():
+    #     if len(walk) > 100:
+    #         break
+    #     walk.append(text)
+    # result = detokenizer.detokenize(walk, return_str=True)
+    # print(result.replace("THISISANEWLINE ", "\n"))
+    print(chain.make_sentence())
     print("-----------------------------------")
 
 print("used {mb}MB".format(mb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss // 1024))
