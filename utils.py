@@ -2,6 +2,8 @@ import sys
 
 import resource
 
+from bs4 import BeautifulSoup
+
 
 def print_stats(i, skipped=None):
     print("{number} total entries".format(number=i))
@@ -12,6 +14,13 @@ def print_stats(i, skipped=None):
 
 def print_ram():
     print("used {mb}MB".format(mb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss // 1024))
+
+
+def html2text(body):
+    soup = BeautifulSoup(body, "lxml")
+    for code in soup.find_all("code"):
+        code.decompose()
+    return soup.get_text()
 
 
 def get_settings(count):

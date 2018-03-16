@@ -7,7 +7,7 @@ from parsexml import parse_posts, parse_comments, parse_usernames
 from utils import *
 # os.chdir("/mydir")
 for file in glob.glob("downloads/**/*.7z"):
-    if not "worldbuilding" in file:
+    if not "raspberry" in file:
         continue
     code = os.path.basename(os.path.splitext(file)[0])
     print(code)

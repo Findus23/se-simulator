@@ -1,7 +1,6 @@
 from xml.etree import ElementTree
 
 import jsonlines
-from bs4 import BeautifulSoup
 
 from utils import *
 
@@ -22,8 +21,7 @@ def parse_posts(inputdir, outputdir):
                 titles.write(title)
             body = element.get('Body')
             if body:
-                soup = BeautifulSoup(body, "lxml")
-                text = soup.get_text()
+                text = html2text(body)
                 if element.get('PostTypeId') == "1":
                     questions.write(text)
                 else:
