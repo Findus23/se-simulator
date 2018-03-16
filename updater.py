@@ -1,11 +1,11 @@
 from internetarchive import get_item, download
 
 from models import *
+from utils import *
 
 ignored_se_sites = ["cs50.stackexchange.com"]
 
-ia = get_item("stackexchange")
-files = {x["name"]: x for x in ia.files}
+files = get_files()
 for site in Site.select()[1:]:
     if site.url in ignored_se_sites:
         continue
@@ -27,5 +27,4 @@ for site in Site.select()[1:]:
         if sizeMB < 50:
             print(file)
             print(sizeMB)
-            download("stackexchange", files=file["name"], verbose=True)
             exit()

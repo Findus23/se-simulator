@@ -1,8 +1,10 @@
+import hashlib
 import sys
 
 import resource
 
 from bs4 import BeautifulSoup
+from internetarchive import get_item
 
 
 def print_stats(i, skipped=None):
@@ -21,6 +23,20 @@ def html2text(body):
     for code in soup.find_all("code"):
         code.decompose()
     return soup.get_text()
+
+
+def get_files():
+    ia = get_item("stackexchange")
+    return {x["name"]: x for x in ia.files}
+
+
+def file_hash(filename):
+    """from https://stackoverflow.com/a/44873382/4398037"""
+    h = hashlib.sha1()
+    with open(filename, 'rb', buffering=0) as f:
+        for b in iter(lambda: f.read(128 * 1024), b''):
+            h.update(b)
+    return h.hexdigest()
 
 
 def get_settings(count):
