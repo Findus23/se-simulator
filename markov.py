@@ -1,8 +1,5 @@
 import markovify
-import spacy
 from nltk.tokenize.moses import MosesDetokenizer, MosesTokenizer
-
-nlp = spacy.load("en")
 
 tokenizer = MosesTokenizer()
 detokenizer = MosesDetokenizer()
@@ -13,4 +10,4 @@ class POSifiedText(markovify.Text):
         return tokenizer.tokenize(sentence)
 
     def word_join(self, words):
-        return detokenizer.detokenize(words,return_str=True)
+        return detokenizer.detokenize(words, return_str=True)

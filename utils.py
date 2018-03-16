@@ -1,5 +1,18 @@
 import sys
 
+import resource
+
+
+def print_stats(i, skipped=None):
+    print("{number} total entries".format(number=i))
+    if skipped:
+        print("{number} skipped".format(number=skipped))
+    print_ram()
+
+
+def print_ram():
+    print("used {mb}MB".format(mb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss // 1024))
+
 
 def get_settings(count):
     if len(sys.argv) != count + 1:

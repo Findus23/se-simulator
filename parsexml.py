@@ -1,26 +1,18 @@
-import resource
 from xml.etree import ElementTree
 
 import jsonlines
 from bs4 import BeautifulSoup
 
-import utils
+from utils import *
 
 
-def print_stats(i, skipped=None):
-    print("{number} total entries".format(number=i))
-    if skipped:
-        print("{number} skipped".format(number=skipped))
-    print("used {mb}MB".format(mb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss // 1024))
-
-
-def parse_posts(basedir):
+def parse_posts(inputdir, outputdir):
     i = 0
     skipped = 0
-    iterator = ElementTree.iterparse(basedir + "/Posts.xml")
-    with jsonlines.open(basedir + '/Questions.jsonl', mode="w") as questions, \
-            jsonlines.open(basedir + '/Answers.jsonl', mode="w") as answers, \
-            jsonlines.open(basedir + "/Titles.jsonl", "w") as titles:
+    iterator = ElementTree.iterparse(inputdir + "/Posts.xml")
+    with jsonlines.open(outputdir + '/Questions.jsonl', mode="w") as questions, \
+            jsonlines.open(outputdir + '/Answers.jsonl', mode="w") as answers, \
+            jsonlines.open(outputdir + "/Titles.jsonl", "w") as titles:
         for event, element in iterator:
             title = element.get('Title')
             # if element.get('Score') and int(element.get('Score')) > 2:
@@ -43,10 +35,10 @@ def parse_posts(basedir):
     print_stats(i, skipped)
 
 
-def parse_comments(basedir):
+def parse_comments(inputdir, outputdir):
     i = 0
-    iterator = ElementTree.iterparse(basedir + "/Comments.xml")
-    with jsonlines.open(basedir + '/Comments.jsonl', mode="w") as comments:
+    iterator = ElementTree.iterparse(inputdir + "/Comments.xml")
+    with jsonlines.open(outputdir + '/Comments.jsonl', mode="w") as comments:
         for event, element in iterator:
             text = element.get('Text')
             if text:
@@ -58,10 +50,10 @@ def parse_comments(basedir):
     print_stats(i)
 
 
-def parse_usernames(basedir):
+def parse_usernames(inputdir, outputdir):
     i = 0
-    iterator = ElementTree.iterparse(basedir + "/Users.xml")
-    with jsonlines.open(basedir + '/Usernames.jsonl', mode="w") as usernames:
+    iterator = ElementTree.iterparse(inputdir + "/Users.xml")
+    with jsonlines.open(outputdir + '/Usernames.jsonl', mode="w") as usernames:
         for event, element in iterator:
             displayname = element.get('DisplayName')
             if displayname:
@@ -74,7 +66,7 @@ def parse_usernames(basedir):
 
 
 if __name__ == "__main__":
-    settings=utils.get_settings(1)
-    parse_posts(settings)
-    parse_comments(settings)
-    parse_comments(settings)
+    settings = get_settings(1)
+    # parse_posts(settings)
+    # parse_comments(settings)
+    # parse_comments(settings)

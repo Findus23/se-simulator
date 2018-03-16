@@ -1,4 +1,6 @@
 sites
+raw
+downloads
 word-rnn-tensorflow/
 .idea/
 __pycache__/

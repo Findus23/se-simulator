@@ -1,15 +1,13 @@
-import resource
-
 import jsonlines
 import markovify
-from markov import POSifiedText
 from nltk.tokenize.moses import MosesDetokenizer, MosesTokenizer
 
-import utils
+from markov import POSifiedText
+from utils import *
 
 detokenizer = MosesDetokenizer()
 
-BASEDIR, mode = utils.get_settings(2)
+BASEDIR, mode = get_settings(2)
 if mode not in ["Questions", "Answers", "Titles"]:
     print("error")
     exit()
@@ -33,7 +31,7 @@ except FileNotFoundError:
             text = text.strip()
             # tokens = tokenizer.tokenize(text=text.replace("\n", " THISISANEWLINE "))
             try:
-                chain = POSifiedText(text, (1 if mode == "Titles" else 2),retain_original=False)
+                chain = POSifiedText(text, (1 if mode == "Titles" else 2), retain_original=False)
                 # chain = markovify.Chain([tokens], (1 if mode == "Titles" else 2))
             except KeyError:
                 continue
@@ -64,4 +62,4 @@ for _ in range(10):
     print(chain.make_sentence())
     print("-----------------------------------")
 
-print("used {mb}MB".format(mb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss // 1024))
+print_ram()
