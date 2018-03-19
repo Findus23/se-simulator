@@ -1,12 +1,15 @@
 import html
+from urllib.parse import urlparse
 
 import requests
-from urllib.parse import urlparse
+
 from models import *
 
-# for i in [Alias, Site]:
+# mdls = [Question, Answer, Title, User, Alias, Site]
+# for i in mdls:
 #     i.drop_table()
-# for i in [Site, Alias]:
+# for i in reversed(mdls):
+#     print(i)
 #     i.create_table()
 
 r = requests.get("https://api.stackexchange.com/2.2/sites?pagesize=500")

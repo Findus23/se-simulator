@@ -1,7 +1,7 @@
+import os
+
 import jsonlines
 import markovify
-import os
-from nltk.tokenize.moses import MosesDetokenizer, MosesTokenizer
 
 from markov import MarkovText, MarkovUserName
 from utils import *
@@ -26,12 +26,12 @@ def load_chain(chainfile, mode):
         return markov.from_json(data)
 
 
-def generate_chain(basedir, mode):
+def generate_chain(sourcedir, chainfile, mode):
     combined_cains = None
     chainlist = []
     markov = get_markov(mode)
     i = 0
-    with jsonlines.open(basedir + "/{type}.jsonl".format(type=mode), mode="r") as content:
+    with jsonlines.open(sourcedir + "/{type}.jsonl".format(type=mode), mode="r") as content:
         for text in content:
             text = text.strip()
             try:
@@ -57,17 +57,28 @@ def generate_chain(basedir, mode):
     return chain
 
 
+def get_chain(url, mode):
+    sourcedir = 'sites/{url}'.format(url=url, type=mode)
+    chainfile = 'sites/{url}/{type}.chain.json'.format(url=url, type=mode)
+    if os.path.exists(chainfile):
+        return load_chain(chainfile, mode)
+    else:
+        return generate_chain(sourcedir, chainfile, mode)
+
+
+def generate_text(chain: markovify.Text, model):
+    if model == "Titles":
+        return chain.make_short_sentence(70)
+    else:
+        return chain.make_sentence()
+
+
 if __name__ == "__main__":
     basedir, mode = get_settings(2)
     if mode not in ["Questions", "Answers", "Titles", "Usernames"]:
         print("error")
         exit()
-    chainfile = basedir + '/{type}.chain.json'.format(type=mode)
-    if os.path.exists(chainfile):
-        chain = load_chain(chainfile, mode)
-    else:
-        chain = generate_chain(basedir, mode)
-
+    chain = get_chain("sites/astronomy.stackexchange.com", mode)
     for _ in range(10):
         # walk = []
         # for text in chain.gen():

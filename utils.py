@@ -1,7 +1,8 @@
 import hashlib
-import sys
-
+import random
 import resource
+import string
+import sys
 
 from bs4 import BeautifulSoup
 from internetarchive import get_item
@@ -51,3 +52,7 @@ def get_settings(count):
         return sys.argv[1]
     elif count == 2:
         return sys.argv[1], sys.argv[2]
+
+
+def get_random_string(length):
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
