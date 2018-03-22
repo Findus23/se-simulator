@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from slugify import slugify
 
 from models import *
@@ -34,7 +36,8 @@ def add_question(site, count=100):
         print(title.text)
         user = users[i]
         print(user.username)
-        Question.create(text=text, title_id=title, user_id=user, site_id=site)
+        time = datetime.now()
+        Question.create(text=text, title_id=title, user_id=user, site_id=site, datetime=time)
 
 
 if __name__ == "__main__":

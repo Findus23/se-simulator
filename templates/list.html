@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block body %}
+    {% for question in questions %}
+        <div class="question"
+             style="border-right-color:{{ question.site.tag_foreground_color }};background-color:{{ question.site.tag_background_color }}">
+            <div class="vote">
+                <a class="up"></a>
+                <div>{{ question.upvotes - question.downvotes }}</div>
+                <a class="down"></a>
+            </div>
+            <div class="questionbox">
+                <a href="https://{{ question.site.url }}" class="sitename" target="_blank" rel="noopener">
+                    {{ question.site.name }}
+                </a>
+                <div>
+                    <a class="title" style="color:{{ question.site.link_color }}"
+                       href="{{ url_for("question",slug=question.title.slug) }}">{{ question.title.text }}</a>
+                </div>
+                {{ question.text }}
+                <div class="date">
+                   asked {{ prettydate(question.datetime) }} by {{ question.user.username }}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <em>Unbelievable. No entries here so far</em>
+    {% endfor %}
+    <pre><code>{{ questions[0]|pprint }}</code></pre>
+{% endblock %}

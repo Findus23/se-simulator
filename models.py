@@ -38,6 +38,7 @@ class Question(BaseModel):
     title = ForeignKeyField(Title)
     user = ForeignKeyField(User)
     site = ForeignKeyField(Site)
+    datetime = DateTimeField()
 
 
 class Answer(BaseModel):

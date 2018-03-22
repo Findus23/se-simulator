@@ -5,3 +5,7 @@ word-rnn-tensorflow/
 .idea/
 __pycache__/
 config.py
+*.old
+
+web/static/css/
+!web/static/css/.gitkeep

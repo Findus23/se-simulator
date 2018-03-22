@@ -1,0 +1,3 @@
+[submodule "web/milligram"]
+	path = web/milligram
+	url = git@github.com:Findus23/milligram.git

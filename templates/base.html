@@ -1,0 +1,10 @@
+<!doctype html>
+<title>Flaskr</title>
+<link href="{{ url_for('static', filename='css/style.scss.css') }}" rel="stylesheet" type="text/css">
+<div class="container">
+    <h1>Flaskr</h1>
+    {% for message in get_flashed_messages() %}
+        <div class="flash">{{ message }}</div>
+    {% endfor %}
+    {% block body %}{% endblock %}
+</div>

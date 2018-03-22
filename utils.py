@@ -3,6 +3,7 @@ import random
 import resource
 import string
 import sys
+from datetime import datetime
 
 from bs4 import BeautifulSoup
 from internetarchive import get_item
@@ -56,3 +57,27 @@ def get_settings(count):
 
 def get_random_string(length):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+
+
+def prettydate(d):
+    diff = datetime.now() - d
+    s = diff.seconds
+    print(diff)
+    if diff.days > 7 or diff.days < 0:
+        return d.strftime('%d %b %y')
+    elif diff.days == 1:
+        return '1 day ago'
+    elif diff.days > 1:
+        return '{} days ago'.format(diff.days)
+    elif s <= 1:
+        return 'just now'
+    elif s < 60:
+        return '{} seconds ago'.format(s)
+    elif s < 120:
+        return '1 minute ago'
+    elif s < 3600:
+        return '{} minutes ago'.format(int(s / 60))
+    elif s < 7200:
+        return '1 hour ago'
+    else:
+        return '{} hours ago'.format(int(s / 3600))
