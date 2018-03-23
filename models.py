@@ -39,6 +39,7 @@ class Question(BaseModel):
     user = ForeignKeyField(User)
     site = ForeignKeyField(Site)
     datetime = DateTimeField()
+    random = IntegerField()
 
 
 class Answer(BaseModel):

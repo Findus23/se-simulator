@@ -62,7 +62,6 @@ def get_random_string(length):
 def prettydate(d):
     diff = datetime.now() - d
     s = diff.seconds
-    print(diff)
     if diff.days > 7 or diff.days < 0:
         return d.strftime('%d %b %y')
     elif diff.days == 1:
@@ -81,3 +80,22 @@ def prettydate(d):
         return '1 hour ago'
     else:
         return '{} hours ago'.format(int(s / 3600))
+
+
+def create_pagination(num_pages, page, padding=2):
+    pages = ["1"]
+    i = 2
+    while i <= num_pages:
+        if i < (page - padding - 1):
+            pages.append("d")
+            i = page - padding
+        elif (i > (page + padding)) and (num_pages > (page + padding + 2)):
+            pages.append("d")
+            i = num_pages
+        pages.append(str(i))
+        i += 1
+    return pages
+
+
+def rand():
+    return random.randint(-2**31, 2**31-1)

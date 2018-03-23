@@ -1,0 +1,44 @@
+{% macro printpage(i,active) %}
+    {#    <a href="/projekte/{{ i }}/" class="{{ "active" if i == active else "other" }}">{{ i }}</a>#}
+    <a href="{{url_for("index",page=i)}}" class="{{ "active" if i == active|string() else "other" }}">{{ i }}</a>
+{% endmacro %}
+
+{% macro pagination(pagearray, num_pages, page,top) %}
+    <!-- License of svg icons - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License) -->
+    <div class="pagination {{ "top" if top else "bottom" }}">
+        {% if page > 1 %}
+            <a rel="prev" href="{{ url_for("index",page=page-1) }}">
+                <svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1203 544q0 13-10 23l-393 393 393 393q10 10 10 23t-10 23l-50 50q-10 10-23 10t-23-10l-466-466q-10-10-10-23t10-23l466-466q10-10 23-10t23 10l50 50q10 10 10 23z"></path>
+                </svg>
+            </a>
+        {% else %}
+            <a rel="prev" class="disabled">
+                <svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1203 544q0 13-10 23l-393 393 393 393q10 10 10 23t-10 23l-50 50q-10 10-23 10t-23-10l-466-466q-10-10-10-23t10-23l466-466q10-10 23-10t23 10l50 50q10 10 10 23z"></path>
+                </svg>
+            </a>
+        {% endif %}
+        {% for i in pagearray %}
+            {% if i == "d" %}
+                <a class="disabled other">&hellip;</a>
+            {% else %}
+                {{ printpage(i, page) }}
+            {% endif %}
+        {% endfor %}
+        {% if page < num_pages %}
+            <a rel="next" href="{{ url_for("index",page=page+1) }}">
+                <svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1171 960q0 13-10 23l-466 466q-10 10-23 10t-23-10l-50-50q-10-10-10-23t10-23l393-393-393-393q-10-10-10-23t10-23l50-50q10-10 23-10t23 10l466 466q10 10 10 23z"></path>
+                </svg>
+            </a>
+        {% else %}
+            <a rel="next" class="disabled">
+                <svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1171 960q0 13-10 23l-466 466q-10 10-23 10t-23-10l-50-50q-10-10-10-23t10-23l393-393-393-393q-10-10-10-23t10-23l50-50q10-10 23-10t23 10l466 466q10 10 10 23z"></path>
+                </svg>
+            </a>
+        {% endif %}
+    </div>
+{%- endmacro %}
+

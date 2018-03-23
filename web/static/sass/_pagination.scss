@@ -1,0 +1,52 @@
+.pagination {
+  &.top {}
+  &.bottom {
+    text-align: right;
+
+    @media (max-width: $mobile-width) {
+      text-align: center;
+    }
+  }
+
+  a {
+    .mobile {
+      display: none;
+    }
+
+    font-size: 18px;
+    display: inline-block;
+    padding: 8px 20px;
+    margin-left: -5px;
+
+    svg {
+      height: 18px;
+      vertical-align: middle;
+    }
+
+    @media (min-width: 500px) {
+      &:hover:not(.disabled), &.active {
+        color: $primary-dark;
+        border-bottom: 3px solid;
+      }
+    }
+
+    &.disabled {
+      color: $lightTextGray;
+
+      svg {
+        fill: $lightTextGray;
+      }
+    }
+
+    @media (max-width: $mobile-width) {
+      &.active::before {
+        content: "Seite ";
+      }
+
+      &.other {
+        display: none;
+      }
+    }
+  }
+}
+

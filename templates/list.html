@@ -1,5 +1,7 @@
 {% extends "base.html" %}
+{% from 'macros.html' import pagination %}
 {% block body %}
+    {{ pagination(pagearray, num_pages, page, True) }}
     {% for question in questions %}
         <div class="question"
              style="border-right-color:{{ question.site.tag_foreground_color }};background-color:{{ question.site.tag_background_color }}">
@@ -18,12 +20,9 @@
                 </div>
                 {{ question.text }}
                 <div class="date">
-                   asked {{ prettydate(question.datetime) }} by {{ question.user.username }}
+                    asked {{ prettydate(question.datetime) }} by {{ question.user.username }}
                 </div>
             </div>
         </div>
-    {% else %}
-        <em>Unbelievable. No entries here so far</em>
     {% endfor %}
-    <pre><code>{{ questions[0]|pprint }}</code></pre>
 {% endblock %}

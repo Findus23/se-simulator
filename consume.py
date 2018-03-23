@@ -9,7 +9,9 @@ from parsexml import parse_posts, parse_comments, parse_usernames
 from utils import *
 
 files = get_files()
-# os.chdir("/mydir")
+
+# TODO: name sites/id after real url
+
 for file in glob.glob("downloads/**/*.7z"):
     if "meta" in file:
         continue

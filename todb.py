@@ -2,6 +2,7 @@ from datetime import datetime
 
 from slugify import slugify
 
+import utils
 from models import *
 from text_generator import get_chain, generate_text
 
@@ -37,12 +38,12 @@ def add_question(site, count=100):
         user = users[i]
         print(user.username)
         time = datetime.now()
-        Question.create(text=text, title_id=title, user_id=user, site_id=site, datetime=time)
+        Question.create(text=text, title_id=title, user_id=user, site_id=site, datetime=time, random=utils.rand())
 
 
 if __name__ == "__main__":
-    query = Site.select().where(Site.last_download.is_null(False)).limit(1)
-    s = query.get()
-    add_username(s)
-    add_title(s)
-    add_question(s)
+    query = Site.select().where(Site.last_download.is_null(False))
+    for s in query:
+        add_username(s)
+        add_title(s)
+        add_question(s)
