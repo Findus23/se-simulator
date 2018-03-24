@@ -1,6 +1,7 @@
 import sass
-from flask import render_template
-from playhouse.flask_utils import PaginatedQuery
+from flask import render_template, jsonify
+from playhouse.flask_utils import PaginatedQuery, get_object_or_404
+from playhouse.shortcuts import model_to_dict
 from sassutils.wsgi import SassMiddleware
 
 import utils
@@ -20,7 +21,6 @@ def index():
     AS ci_lower_bound
     """
     query = Question.select(SQL(select)).order_by(SQL("ci_lower_bound DESC, random"))
-    print(query.sql())
     paginated_query = PaginatedQuery(query, paginate_by=10, check_bounds=True)
     pagearray = utils.create_pagination(paginated_query.get_page_count(), paginated_query.get_page())
     return render_template(
@@ -34,11 +34,13 @@ def index():
 
 @app.route('/q/<string:slug>')
 def question(slug):
-    # query = Question.select().limit(10)
-    # return query_to_response(Question.select().limit(10), limit=False, max_depth=1)
-    # return query_to_response(query, max_depth=1)
-    return render_template("detail.html", question=slug)
-    # return render_template('list.html', questions=query_to_response(query, max_depth=1))
+    query = Question.select().join(Title).where(Title.slug == slug)
+    question = get_object_or_404(query)
+    return render_template(
+        "detail.html",
+        debug=model_to_dict(question),
+        question=question
+    )
 
 
 if __name__ == '__main__':

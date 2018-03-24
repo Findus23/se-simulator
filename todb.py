@@ -19,6 +19,7 @@ def add_username(site, count=100):
 
 
 def add_title(site, count=100):
+    # TODO: Make sure that every slug is unique
     chain = get_chain(site.url, "Titles")
     for _ in range(count):
         title = generate_text(chain, "Titles")

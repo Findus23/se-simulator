@@ -6,7 +6,6 @@
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css">
 {% endif %}
 <div class="container">
-    <h1>Flaskr</h1>
     {% for message in get_flashed_messages() %}
         <div class="flash">{{ message }}</div>
     {% endfor %}

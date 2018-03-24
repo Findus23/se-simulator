@@ -1,11 +1,7 @@
 .pagination {
-  &.top {}
+  &.top {
+  }
   &.bottom {
-    text-align: right;
-
-    @media (max-width: $mobile-width) {
-      text-align: center;
-    }
   }
 
   a {

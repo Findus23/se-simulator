@@ -18,11 +18,12 @@
                     <a class="title" style="color:{{ question.site.link_color }}"
                        href="{{ url_for("question",slug=question.title.slug) }}">{{ question.title.text }}</a>
                 </div>
-                {{ question.text }}
+                {{ question.text|truncate(200, False, ' …', 10) }}
                 <div class="date">
                     asked {{ prettydate(question.datetime) }} by {{ question.user.username }}
                 </div>
             </div>
         </div>
     {% endfor %}
+    {{ pagination(pagearray, num_pages, page, False) }}
 {% endblock %}

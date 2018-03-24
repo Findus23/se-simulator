@@ -1,4 +1,34 @@
 {% extends "base.html" %}
 {% block body %}
-    <h1>{{ question }}</h1>
+    <header class="siteheader"
+            style="background-color: {{ question.site.tag_background_color if question.site.tag_background_color!="#FFF" }};
+                    color: {{ question.site.link_color }}">
+        <img src="{{ question.site.icon_url }}" width="30" height="30">
+        <span>{{ question.site.name }}</span>
+        <a class="gotolink" href="https://{{ question.site.url }}" target="_blank" rel="noopener">Go to site</a>
+    </header>
+
+    <h1>{{ question.title.text }}</h1>
+
+    <div class="question">
+        <div class="vote">
+            <a class="up"></a>
+            <div>{{ question.upvotes - question.downvotes }}</div>
+            <a class="down"></a>
+        </div>
+        <div class="questionbox">
+
+            {% for paragraph in question.text.split("\n") %}
+                <p>{{ paragraph }}</p>
+            {% endfor %}
+            <div class="questionfooter">
+                <div class="authorbox">
+                    asked {{ prettydate(question.datetime) }}
+                    <br>
+                    {{ question.user.username }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <pre>{{ debug|pprint(True) }}</pre>
 {% endblock %}
