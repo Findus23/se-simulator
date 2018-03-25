@@ -75,7 +75,6 @@ def generate_text(chain: markovify.Text, model):
         paragraphs = []
         sentences = []
         count = int((random.randint(2, 6) * random.randint(2, 6) / 5))
-        print(count)
         for _ in range(count):
             sentences.append(chain.make_sentence())
             if random.random() < 0.4:

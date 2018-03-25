@@ -44,7 +44,8 @@ class Question(BaseModel):
 
 class Answer(BaseModel):
     text = TextField()
-    upvotes = IntegerField()
-    downvotes = IntegerField()
+    upvotes = IntegerField(default=0)
+    downvotes = IntegerField(default=0)
+    question = ForeignKeyField(Question, null=True)
     user = ForeignKeyField(User)
     site = ForeignKeyField(Site)

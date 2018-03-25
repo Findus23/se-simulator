@@ -20,6 +20,11 @@ limiter = Limiter(
     key_func=get_remote_address,
     headers_enabled=True
 )
+import logging
+
+logger = logging.getLogger('peewee')
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.StreamHandler())
 
 
 @app.route('/')
@@ -47,11 +52,21 @@ def index():
 def question(slug):
     query = Question.select().join(Title).where(Title.slug == slug)
     question = get_object_or_404(query)
+    answers = Answer.select().where(Answer.question == question) # TODO: Sort by score
     return render_template(
         "detail.html",
         debug=model_to_dict(question),
-        question=question
+        question=question,
+        answers=answers
     )
+
+
+@app.route('/test')
+def sdfdsfds():
+    user = User.select().get()
+
+    return jsonify(
+        model_to_dict(Answer.select().where((Answer.question.is_null())).get()))
 
 
 @app.route('/api/vote/<int:id>/<string:type>', methods=["POST"])

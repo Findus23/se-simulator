@@ -5,12 +5,12 @@ import requests
 
 from models import *
 
-# mdls = [Question, Answer, Title, User, Alias, Site]
-# for i in mdls:
-#     i.drop_table()
-# for i in reversed(mdls):
-#     print(i)
-#     i.create_table()
+mdls = [Answer, Question, Title, User, Alias, Site]
+for i in mdls:
+    i.drop_table()
+for i in reversed(mdls):
+    print(i)
+    i.create_table()
 
 r = requests.get("https://api.stackexchange.com/2.2/sites?pagesize=500")
 for site in r.json()["items"]:

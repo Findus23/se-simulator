@@ -30,5 +30,19 @@
             </div>
         </div>
     </div>
+    {% for answer in answers %}
+        <hr>
+        <div class="answer">
+            <div class="vote">
+                <a class="up"></a>
+                <div>{{ answer.upvotes - answer.downvotes }}</div>
+                <a class="down"></a>
+            </div>
+            {% for paragraph in answer.text.split("\n") %}
+                <p>{{ paragraph }}</p>
+            {% endfor %}
+
+        </div>
+    {% endfor %}
     <pre>{{ debug|pprint(True) }}</pre>
 {% endblock %}

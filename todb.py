@@ -1,3 +1,4 @@
+import random
 from datetime import datetime
 
 from slugify import slugify
@@ -7,11 +8,12 @@ from models import *
 from text_generator import get_chain, generate_text
 
 
-def add_username(site, count=100):
-    """
+def get_unused_users(site, count):
+    return User.select().join(Question, JOIN.LEFT_OUTER).switch(User).join(Answer, JOIN.LEFT_OUTER) \
+        .where((User.site == site) & (Question.id.is_null()) & (Answer.id.is_null()))
 
-    :type site: Site
-    """
+
+def add_username(site, count=500):
     chain = get_chain(site.url, "Usernames")
     for _ in range(count):
         username = generate_text(chain, "Usernames")
@@ -27,31 +29,37 @@ def add_title(site, count=100):
         Title.create(text=title, slug=slug, site=site)
 
 
+def add_answer(site, count=300):
+    users = get_unused_users(site, count)
+    chain = get_chain(site.url, "Answers")
+
+    for i in range(count):
+        text = generate_text(chain, "Answers")
+        user = users[i]
+        time = datetime.now()
+        Answer.create(text=text, user_id=user, site_id=site, datetime=time)
+
+
 def add_question(site, count=100):
-    users = User.select().where(User.site == site).limit(count)
-    titles = Title.select().where(Title.site == site).limit(count)
+    users = get_unused_users(site, count)
+    titles = Title.select().join(Question, JOIN.LEFT_OUTER) \
+        .where((Title.site == site) & (Question.id.is_null())) \
+        .limit(count)
     chain = get_chain(site.url, "Questions")
 
     for i in range(count):
         text = generate_text(chain, "Questions")
         title = titles[i]
-        print(title.text)
         user = users[i]
-        print(user.username)
         time = datetime.now()
-        Question.create(text=text, title_id=title, user_id=user, site_id=site, datetime=time, random=utils.rand())
-
-
-def add_answer(site, count=100):
-    users = User.select().where(User.site == site).limit(count)
-    chain = get_chain(site.url, "Answers")
-
-    for i in range(count):
-        text = generate_text(chain, "Questions")
-        user = users[i]
-        print(user.username)
-        time = datetime.now()
-        Question.create(text=text, title_id=title, user_id=user, site_id=site, datetime=time, random=utils.rand())
+        question = Question.create(text=text, title_id=title, user_id=user, site_id=site, datetime=time,
+                                   random=utils.rand())
+        num_answers = random.randint(1, 4)
+        answers = Answer.select().where((Answer.site == site) & (Answer.question.is_null())).limit(num_answers)
+        for answer in answers:
+            print("question {} goes to answer {}".format(answer.id, question.id))
+            answer.question = question
+            answer.save()
 
 
 if __name__ == "__main__":
@@ -59,4 +67,5 @@ if __name__ == "__main__":
     for s in query:
         add_username(s)
         add_title(s)
+        add_answer(s)
         add_question(s)
