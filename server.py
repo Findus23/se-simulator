@@ -1,14 +1,17 @@
 import sass
-from flask import render_template, jsonify
+from flask import render_template, send_from_directory, abort, session, jsonify
 from playhouse.flask_utils import PaginatedQuery, get_object_or_404
 from playhouse.shortcuts import model_to_dict
 from sassutils.wsgi import SassMiddleware
 
+import config
 import utils
 from app import app
 from models import *
 
 app.jinja_env.globals.update(prettydate=utils.prettydate)
+
+app.secret_key = config.secret_key
 
 
 @app.route('/')
@@ -43,11 +46,43 @@ def question(slug):
     )
 
 
+@app.route('/api/vote/<int:id>/<string:type>', methods=["POST"])
+def vote(id, type):
+    if "voted" not in session:
+        voted = []
+    else:
+        voted = session["voted"]
+    print(voted)
+    if id in voted:
+        abort(403)
+    if type == "up":
+        query = Question.update(upvotes=Question.upvotes + 1).where(Question.id == id)
+    elif type == "down":
+        query = Question.update(downvotes=Question.downvotes + 1).where(Question.id == id)
+    else:
+        return abort(404)
+    voted.append(id)
+    session["voted"] = voted
+    query.execute()
+    query = Question.select(Question.upvotes, Question.downvotes).where(Question.id == id).get()
+
+    return jsonify({
+        "upvotes": query.upvotes,
+        "downvotes": query.downvotes
+    })
+
+
 if __name__ == '__main__':
+    @app.route('/static/js/<path:path>')
+    def send_js(path):
+        return send_from_directory('web/static/js', path)
+
+
     app.debug = True
     app.wsgi_app = SassMiddleware(app.wsgi_app, manifests={
         'web': ('static/sass', 'static/css', '/static/css')
     })
     app.run()
+
 else:
     sass.compile(dirname=('web/static/sass', 'web/static/css'), output_style='compressed')

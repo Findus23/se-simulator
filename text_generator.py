@@ -69,7 +69,7 @@ def get_chain(url, mode):
 def generate_text(chain: markovify.Text, model):
     if model == "Titles":
         return chain.make_short_sentence(70)
-    if model == "Questions":
+    if model == "Questions" or "Answers":
         paragraphs = []
         sentences = []
         count = int((random.randint(2, 6) * random.randint(2, 6) / 5))
