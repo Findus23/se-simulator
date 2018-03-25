@@ -69,6 +69,8 @@ def get_chain(url, mode):
 def generate_text(chain: markovify.Text, model):
     if model == "Titles":
         return chain.make_short_sentence(70)
+    if model == "Usernames":
+        return chain.make_short_sentence(36)
     if model == "Questions" or "Answers":
         paragraphs = []
         sentences = []

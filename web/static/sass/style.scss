@@ -75,14 +75,22 @@ pre > code {
       height: 0;
       border-style: solid;
       cursor: pointer;
+      transition: border-color .3s;
     }
     .up {
       border-width: 0 15px 15px 15px;
       border-color: transparent transparent #858c93 transparent;
+      &:hover, &:focus, &.active {
+        border-color: transparent transparent darken(#858c93,20%) transparent;
+      }
     }
     .down {
       border-width: 15px 15px 0 15px;
       border-color: #858c93 transparent transparent transparent;
+      &:hover, &:focus, &.active {
+        border-color: darken(#858c93,20%) transparent transparent transparent;
+      }
+
     }
   }
 }

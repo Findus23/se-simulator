@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     if (this.status >= 200 && this.status < 400) {
                         var resp = JSON.parse(this.response);
                         console.info(resp);
+                        el.classList.add("active");
                         elvote.querySelector("div").textContent = resp.upvotes - resp.downvotes
                     } else {
                         // We reached our target server, but it returned an error

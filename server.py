@@ -1,5 +1,7 @@
 import sass
-from flask import render_template, send_from_directory, abort, session, jsonify
+from flask import render_template, send_from_directory, abort, session, jsonify, make_response
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from playhouse.flask_utils import PaginatedQuery, get_object_or_404
 from playhouse.shortcuts import model_to_dict
 from sassutils.wsgi import SassMiddleware
@@ -12,6 +14,12 @@ from models import *
 app.jinja_env.globals.update(prettydate=utils.prettydate)
 
 app.secret_key = config.secret_key
+
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    headers_enabled=True
+)
 
 
 @app.route('/')
@@ -47,6 +55,7 @@ def question(slug):
 
 
 @app.route('/api/vote/<int:id>/<string:type>', methods=["POST"])
+@limiter.limit("10 per minute")
 def vote(id, type):
     if "voted" not in session:
         voted = []
@@ -70,6 +79,22 @@ def vote(id, type):
         "upvotes": query.upvotes,
         "downvotes": query.downvotes
     })
+
+
+@app.errorhandler(429)
+def ratelimit_handler(e):
+    return make_response(
+        jsonify(error="ratelimit exceeded {}".format(e.description))
+        , 429
+    )
+
+
+@app.errorhandler(403)
+def ratelimit_handler(e):
+    return make_response(
+        jsonify(error="access denied")
+        , 403
+    )
 
 
 if __name__ == '__main__':

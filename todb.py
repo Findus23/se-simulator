@@ -42,6 +42,18 @@ def add_question(site, count=100):
         Question.create(text=text, title_id=title, user_id=user, site_id=site, datetime=time, random=utils.rand())
 
 
+def add_answer(site, count=100):
+    users = User.select().where(User.site == site).limit(count)
+    chain = get_chain(site.url, "Answers")
+
+    for i in range(count):
+        text = generate_text(chain, "Questions")
+        user = users[i]
+        print(user.username)
+        time = datetime.now()
+        Question.create(text=text, title_id=title, user_id=user, site_id=site, datetime=time, random=utils.rand())
+
+
 if __name__ == "__main__":
     query = Site.select().where(Site.last_download.is_null(False))
     for s in query:
