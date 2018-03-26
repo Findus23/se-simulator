@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import sass
 from flask import render_template, send_from_directory, abort, session, jsonify, make_response
 from flask_limiter import Limiter
@@ -20,23 +22,22 @@ limiter = Limiter(
     key_func=get_remote_address,
     headers_enabled=True
 )
-import logging
-
-logger = logging.getLogger('peewee')
-logger.setLevel(logging.DEBUG)
-logger.addHandler(logging.StreamHandler())
 
 
 @app.route('/')
-def index():
-    select = """
-    *,
-  ((upvotes + 1.9208) / (upvotes + downvotes) -
-   1.96 * SQRT((upvotes * downvotes) / (upvotes + downvotes) + 0.9604) /
-   (upvotes + downvotes)) / (1 + 3.8416 / (upvotes + downvotes))
-    AS ci_lower_bound
-    """
-    query = Question.select(SQL(select)).order_by(SQL("ci_lower_bound DESC, random"))
+@app.route('/s/<string:site>')
+def index(site=None):
+    query = Question.select(Question, User, Site, Title, SQL(utils.rating_sql)).join(Site).switch(Question).join(
+        User).switch(
+        Question).join(
+        Title)
+    if site:
+        query = query.where(Site.url == site)
+        site_element = Site.select().where(Site.url == site).get()
+    else:
+        site_element = utils.get_fallback_site()
+    query = query.order_by(SQL("ci_lower_bound DESC, random"))
+    # return jsonify(model_to_dict(query.get()))
     paginated_query = PaginatedQuery(query, paginate_by=10, check_bounds=True)
     pagearray = utils.create_pagination(paginated_query.get_page_count(), paginated_query.get_page())
     return render_template(
@@ -44,52 +45,81 @@ def index():
         pagearray=pagearray,
         num_pages=paginated_query.get_page_count(),
         page=paginated_query.get_page(),
-        questions=paginated_query.get_object_list()
+        questions=paginated_query.get_object_list(),
+        site=site_element
     )
 
 
 @app.route('/q/<string:slug>')
 def question(slug):
-    query = Question.select().join(Title).where(Title.slug == slug)
+    query = Question.select(Question, Title, User, Site) \
+        .join(Title).switch(Question) \
+        .join(User).switch(Question) \
+        .join(Site).where(Title.slug == slug)
     question = get_object_or_404(query)
-    answers = Answer.select().where(Answer.question == question) # TODO: Sort by score
+    answers = Answer.select(Answer, User, SQL(utils.rating_sql)) \
+        .join(User).where(Answer.question == question) \
+        .order_by(SQL("ci_lower_bound DESC"))
     return render_template(
         "detail.html",
-        debug=model_to_dict(question),
         question=question,
         answers=answers
     )
 
 
+@app.route('/api/sites')
+def sites():
+    sites = Site.select().where(Site.last_download.is_null(False))
+    data = {}
+    for site in sites:
+        data[site.url] = (model_to_dict(site))
+    return jsonify(data)
+
+
 @app.route('/test')
 def sdfdsfds():
     user = User.select().get()
-
+    for question in Question.select():
+        question.upvotes = 1
+        question.downvotes = 1
+        question.save()
     return jsonify(
         model_to_dict(Answer.select().where((Answer.question.is_null())).get()))
 
 
-@app.route('/api/vote/<int:id>/<string:type>', methods=["POST"])
+@app.route('/api/vote/<string:type>/<int:id>/<string:vote>', methods=["POST"])
 @limiter.limit("10 per minute")
-def vote(id, type):
+def vote(type, id, vote):
     if "voted" not in session:
         voted = []
     else:
         voted = session["voted"]
     print(voted)
-    if id in voted:
+    if (type, id) in voted:
         abort(403)
-    if type == "up":
-        query = Question.update(upvotes=Question.upvotes + 1).where(Question.id == id)
-    elif type == "down":
-        query = Question.update(downvotes=Question.downvotes + 1).where(Question.id == id)
+    if type == "question":
+        if vote == "up":
+            query = Question.update(upvotes=Question.upvotes + 1).where(Question.id == id)
+        elif vote == "down":
+            query = Question.update(downvotes=Question.downvotes + 1).where(Question.id == id)
+        else:
+            return abort(404)
+    elif type == "answer":
+        if vote == "up":
+            query = Answer.update(upvotes=Answer.upvotes + 1).where(Answer.id == id)
+        elif vote == "down":
+            query = Answer.update(downvotes=Answer.downvotes + 1).where(Answer.id == id)
+        else:
+            return abort(404)
     else:
         return abort(404)
-    voted.append(id)
+    voted.append((type, id))
     session["voted"] = voted
     query.execute()
-    query = Question.select(Question.upvotes, Question.downvotes).where(Question.id == id).get()
-
+    if type == "question":
+        query = Question.select(Question.upvotes, Question.downvotes).where(Question.id == id).get()
+    else:
+        query = Answer.select(Answer.upvotes, Answer.downvotes).where(Answer.id == id).get()
     return jsonify({
         "upvotes": query.upvotes,
         "downvotes": query.downvotes
@@ -98,21 +128,22 @@ def vote(id, type):
 
 @app.errorhandler(429)
 def ratelimit_handler(e):
-    return make_response(
-        jsonify(error="ratelimit exceeded {}".format(e.description))
-        , 429
-    )
+    return make_response(jsonify(error="ratelimit exceeded {}".format(e.description)), 429)
 
 
 @app.errorhandler(403)
 def ratelimit_handler(e):
-    return make_response(
-        jsonify(error="access denied")
-        , 403
-    )
+    return make_response(jsonify(error="access denied"), 403)
 
 
 if __name__ == '__main__':
+    import logging
+
+    logger = logging.getLogger('peewee')
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(logging.StreamHandler())
+
+
     @app.route('/static/js/<path:path>')
     def send_js(path):
         return send_from_directory('web/static/js', path)

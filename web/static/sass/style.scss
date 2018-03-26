@@ -2,11 +2,12 @@ $link-color: #07C;
 $link-hover-color: #3af;
 
 @import "../../milligram/src/milligram";
-
+@import "awesomplete.base";
 @import "pagination";
 
 body {
   font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 15px;
   color: #111;
 }
 
@@ -14,15 +15,17 @@ pre > code {
   white-space: pre-wrap;
 }
 
-.question {
+.content {
   position: relative;
 
   display: flex;
   flex-direction: row;
-  padding: 15px 5px 30px;
-  border-bottom: solid lightgray 1px;
+  padding: 15px 5px 15px;
+  &:not(.question){
+    border-bottom: solid lightgray 1px;
+  }
   border-right: solid 10px transparent;
-  .questionbox {
+  .contentbox {
     margin-left: 10px;
     width: 100%;
     .sitename {
@@ -34,14 +37,14 @@ pre > code {
         text-decoration: underline;
       }
     }
-    .date{
+    .date {
       position: absolute;
       right: 5px;
       bottom: 5px;
       font-size: 12px;
       color: grey;
     }
-    .questionfooter {
+    .contentfooter {
       display: flex;
       justify-content: right;
       margin: 0;
@@ -81,27 +84,28 @@ pre > code {
       border-width: 0 15px 15px 15px;
       border-color: transparent transparent #858c93 transparent;
       &:hover, &:focus, &.active {
-        border-color: transparent transparent darken(#858c93,20%) transparent;
+        border-color: transparent transparent darken(#858c93, 20%) transparent;
       }
     }
     .down {
       border-width: 15px 15px 0 15px;
       border-color: #858c93 transparent transparent transparent;
       &:hover, &:focus, &.active {
-        border-color: darken(#858c93,20%) transparent transparent transparent;
+        border-color: darken(#858c93, 20%) transparent transparent transparent;
       }
 
     }
   }
 }
 
-h1{
+h1, h2 {
   border-bottom: solid 1px lightgray;
   padding-bottom: 10px;
   margin-bottom: 0;
   margin-top: 10px;
   color: inherit;
 }
+h2 {font-size: 18px}
 
 .siteheader {
   background: #ebf2f5;

@@ -98,4 +98,21 @@ def create_pagination(num_pages, page, padding=2):
 
 
 def rand():
-    return random.randint(-2**31, 2**31-1)
+    return random.randint(-2 ** 31, 2 ** 31 - 1)
+
+
+rating_sql = """
+((upvotes + 1.9208) / (upvotes + downvotes) -
+1.96 * SQRT((upvotes * downvotes) / (upvotes + downvotes) + 0.9604) /
+(upvotes + downvotes)) / (1 + 3.8416 / (upvotes + downvotes))
+AS ci_lower_bound
+"""
+
+
+def get_fallback_site():
+    return {
+        "name": "Stack Exchange",
+        "url": "stackexchange.com/",
+        "icon_url": "https://cdn.sstatic.net/Sites/stackexchange/img/apple-touch-icon.png",
+        "fallback": True
+    }

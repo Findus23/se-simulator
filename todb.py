@@ -57,7 +57,6 @@ def add_question(site, count=100):
         num_answers = random.randint(1, 4)
         answers = Answer.select().where((Answer.site == site) & (Answer.question.is_null())).limit(num_answers)
         for answer in answers:
-            print("question {} goes to answer {}".format(answer.id, question.id))
             answer.question = question
             answer.save()
 

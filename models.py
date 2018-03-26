@@ -46,6 +46,7 @@ class Answer(BaseModel):
     text = TextField()
     upvotes = IntegerField(default=0)
     downvotes = IntegerField(default=0)
+    datetime = DateTimeField()
     question = ForeignKeyField(Question, null=True)
     user = ForeignKeyField(User)
     site = ForeignKeyField(Site)
