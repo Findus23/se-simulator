@@ -3,20 +3,21 @@
 {% block body %}
     {{ siteheader(site) }}
 
-    <label for="siteselector">Seite</label>
-    <input id="siteselector" class="awesomplete" value="{{ site.url if not site.fallback }}"/>
+    <label class="label-inline" for="siteselector">Seite</label>
+    <input id="siteselector" class="awesomplete" value="{{ site.url if not site.fallback }}" data-mode="filter"/>
     {% if not site.fallback %}
 
         <a href="{{ url_for("index") }}">Clear filter</a>
     {% endif %}
     {{ pagination(pagearray, num_pages, page, True) }}
     {% for question in questions %}
+        {% set vote=voted[("question", question.id)] %}
         <div class="content question"
              style="border-right-color:{{ question.site.tag_foreground_color }};background-color:{{ question.site.tag_background_color }}">
             <div class="vote" data-id="{{ question.id }}" data-type="question">
-                <a class="up"></a>
+                <a class="up {{ "active" if vote == True }}"></a>
                 <div>{{ question.upvotes - question.downvotes }}</div>
-                <a class="down"></a>
+                <a class="down {{ "active" if vote == False }}"></a>
             </div>
             <div class="contentbox">
                 <a href="https://{{ question.site.url }}" class="sitename" target="_blank" rel="noopener">

@@ -3,12 +3,12 @@
 {% block body %}
     {{ siteheader(question.site) }}
     <h1>{{ question.title.text }}</h1>
-
+    {% set vote=voted[("question", question.id)] %}
     <div class="content question">
         <div class="vote" data-id="{{ question.id }}" data-type="question">
-            <a class="up"></a>
+            <a class="up {{ "active" if vote == True }}"></a>
             <div>{{ question.upvotes - question.downvotes }}</div>
-            <a class="down"></a>
+            <a class="down {{ "active" if vote == False }}"></a>
         </div>
         <div class="contentbox">
 
@@ -26,11 +26,12 @@
     </div>
     <h2 class="answerheader">{{ answers|length }} Answers</h2>
     {% for answer in answers %}
+        {% set vote=voted[("answer", answer.id)] %}
         <div class="content answer">
             <div class="vote" data-id="{{ answer.id }}" data-type="answer" data-ranking="{{ answer.ci_lower_bound }}">
-                <a class="up"></a>
+                <a class="up {{ "active" if vote == True }}"></a>
                 <div>{{ answer.upvotes - answer.downvotes }}</div>
-                <a class="down"></a>
+                <a class="down {{ "active" if vote == False }}"></a>
             </div>
             <div class="contentbox">
                 {% for paragraph in answer.text.split("\n") %}

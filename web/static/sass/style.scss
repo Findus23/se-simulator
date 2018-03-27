@@ -2,11 +2,10 @@ $link-color: #07C;
 $link-hover-color: #3af;
 
 @import "../../milligram/src/milligram";
-@import "awesomplete.base";
+@import "awesomplete.custom";
 @import "pagination";
 
 body {
-  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
   font-size: 15px;
   color: #111;
 }

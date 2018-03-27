@@ -1,9 +1,10 @@
 from datetime import datetime
-
+import time
 import sass
 from flask import render_template, send_from_directory, abort, session, jsonify, make_response
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_session import Session
 from playhouse.flask_utils import PaginatedQuery, get_object_or_404
 from playhouse.shortcuts import model_to_dict
 from sassutils.wsgi import SassMiddleware
@@ -15,7 +16,13 @@ from models import *
 
 app.jinja_env.globals.update(prettydate=utils.prettydate)
 
+SESSION_TYPE = 'redis'
+SESSION_COOKIE_SECURE = config.production
+SESSION_USE_SIGNER = True
+SESSION_KEY_PREFIX = "StackDataSessions:"
+app.config.from_object(__name__)
 app.secret_key = config.secret_key
+Session(app)
 
 limiter = Limiter(
     app,
@@ -46,7 +53,8 @@ def index(site=None):
         num_pages=paginated_query.get_page_count(),
         page=paginated_query.get_page(),
         questions=paginated_query.get_object_list(),
-        site=site_element
+        site=site_element,
+        voted=session["voted"] if "voted" in session and not config.make_cacheable else None
     )
 
 
@@ -63,7 +71,23 @@ def question(slug):
     return render_template(
         "detail.html",
         question=question,
-        answers=answers
+        answers=answers,
+        voted=session["voted"] if "voted" in session and not config.make_cacheable else None
+    )
+
+
+@app.route('/quiz')
+def quiz():
+    time1 = time.time()
+    question = Question.select(Question, Title, User, Site) \
+        .join(Title).switch(Question) \
+        .join(User).switch(Question) \
+        .join(Site).where((Question.upvotes - Question.downvotes >= 0)).order_by(SQL("RAND()")).limit(1).get()
+    time2 = time.time()
+    print('{} ms'.format((time2 - time1) * 1000.0))
+    return render_template(
+        "quiz.html",
+        question=question
     )
 
 
@@ -78,11 +102,6 @@ def sites():
 
 @app.route('/test')
 def sdfdsfds():
-    user = User.select().get()
-    for question in Question.select():
-        question.upvotes = 1
-        question.downvotes = 1
-        question.save()
     return jsonify(
         model_to_dict(Answer.select().where((Answer.question.is_null())).get()))
 
@@ -91,11 +110,9 @@ def sdfdsfds():
 @limiter.limit("10 per minute")
 def vote(type, id, vote):
     if "voted" not in session:
-        voted = []
-    else:
-        voted = session["voted"]
-    print(voted)
-    if (type, id) in voted:
+        session["voted"] = {}
+    print(session["voted"])
+    if (type, id) in session["voted"]:
         abort(403)
     if type == "question":
         if vote == "up":
@@ -113,8 +130,7 @@ def vote(type, id, vote):
             return abort(404)
     else:
         return abort(404)
-    voted.append((type, id))
-    session["voted"] = voted
+    session["voted"][(type, id)] = vote == "up"
     query.execute()
     if type == "question":
         query = Question.select(Question.upvotes, Question.downvotes).where(Question.id == id).get()

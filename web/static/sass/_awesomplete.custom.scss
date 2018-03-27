@@ -1,0 +1,55 @@
+// Based on https://github.com/LeaVerou/awesomplete/blob/gh-pages/awesomplete.theme.css
+// Copyright (c) 2015 Lea Verou
+// MIT License
+
+@import "awesomplete.base";
+
+.awesomplete {
+  > ul {
+    padding: 1rem 1rem 0;
+    margin: .2em 0 0;
+
+    border: 1px solid rgba(0, 0, 0, .3);
+    box-shadow: .05em .2em .6em rgba(0, 0, 0, .2);
+    text-shadow: none;
+    > li {
+      position: relative;
+      padding: .2em .5em;
+      cursor: pointer;
+      &:hover {
+        background: hsl(200, 40%, 80%);
+        color: black;
+        mark {
+          background: hsl(68, 100%, 41%);
+        }
+      }
+      &[aria-selected="true"] {
+        background: hsl(205, 40%, 40%);
+        color: white;
+        mark {
+          background: hsl(86, 100%, 21%);
+          color: inherit;
+        }
+      }
+    }
+    &:before { // pointer
+      content: "";
+      position: absolute;
+      top: -.43em;
+      left: 1em;
+      width: 0;
+      height: 0;
+      padding: .4em;
+      background: white;
+      border: inherit;
+      border-right: 0;
+      border-bottom: 0;
+      -webkit-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
+  }
+  mark {
+    background: hsl(65, 100%, 50%);
+  }
+}
+

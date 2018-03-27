@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block body %}
+
+    <input id="siteselector" class="awesomplete" data-mode="quiz"/>
+    <button id="check">Check</button>
+
+    <h1>{{ question.title.text }}</h1>
+    <div class="content question">
+        <div class="vote">
+            <a class="up"></a>
+            <div>{{ question.upvotes - question.downvotes }}</div>
+            <a class="down"></a>
+        </div>
+        <div class="contentbox">
+
+            {% for paragraph in question.text.split("\n") %}
+                <p>{{ paragraph }}</p>
+            {% endfor %}
+            <div class="contentfooter">
+                <div class="authorbox">
+                    asked {{ prettydate(question.datetime) }}
+                    <br>
+                    {{ question.user.username }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
