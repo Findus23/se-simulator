@@ -27,6 +27,45 @@ document.addEventListener("DOMContentLoaded", function (event) {
         });
     });
     var input = document.getElementById("siteselector");
+    var check = document.getElementById("check");
+    var header = document.getElementsByClassName("siteheader")[0];
+    var retry = document.getElementById("retry");
+    var selectedSite, headerimg, headertitle, entered;
+
+    function toast(type, message) {
+        console.warn(type, message)
+    }
+
+    function checkQuiz(selection, id) {
+        console.info(selection, id);
+        input.disabled = true;
+        check.disabled = true;
+        var request = new XMLHttpRequest();
+        request.open("POST", "/api/quiz/" + id + "/" + selection.url, true);
+
+        request.onload = function () {
+            if (this.status >= 200 && this.status < 400) {
+                var resp = JSON.parse(this.response);
+                console.log(resp.correct);
+                headertitle.innerText = resp.site.name;
+                headerimg.src = resp.site.icon_url;
+                header.style.backgroundColor = resp.site.tag_background_color;
+                header.style.color = resp.site.link_color;
+                var result = document.getElementById(resp.correct ? "correct" : "incorrect");
+                result.style.display = "block";
+                retry.focus()
+            } else {
+                // We reached our target server, but it returned an error
+
+            }
+        };
+        request.onerror = function () {
+            // There was a connection error of some sort
+        };
+        request.send();
+
+    }
+
     if (input) {
         var mode = input.dataset.mode;
         var request = new XMLHttpRequest();
@@ -52,18 +91,37 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     minChars: 0,
                     autoFirst: true
                 });
+                if (mode === "quiz") {
+                    console.log(input);
+                    input.focus()
+                }
                 input.addEventListener("awesomplete-select", function (event) {
                     if (!(event.text.value in resp)) { // shouldn't happen
                         return false
                     }
-                    var selectedSite = resp[event.text.value];
+                    selectedSite = resp[event.text.value];
 
                     if (mode === "filter") {
                         window.location.href = "/s/" + selectedSite.url
                     } else if (mode === "quiz") {
-                        console.log(selectedSite);
-                    }
+                        input.focus();
 
+                        entered = true;
+                        console.log(selectedSite);
+                        check.style.backgroundColor = selectedSite.tag_background_color;
+                        header.style.backgroundColor = selectedSite.tag_background_color;
+                        check.style.color = selectedSite.link_color;
+                        header.style.color = selectedSite.link_color;
+                        while (header.firstChild) {
+                            header.removeChild(header.firstChild);
+                        }
+                        headerimg = new Image(30, 30);
+                        headerimg.src = selectedSite.icon_url;
+                        headertitle = document.createElement('span');
+                        headertitle.innerText = selectedSite.name + "?";
+                        header.appendChild(headerimg);
+                        header.appendChild(headertitle);
+                    }
                 });
             } else {
                 // We reached our target server, but it returned an error
@@ -74,6 +132,36 @@ document.addEventListener("DOMContentLoaded", function (event) {
             // There was a connection error of some sort
         };
         request.send();
+        if (mode === "quiz") {
+            var handler = function (event) {
+                // event.preventDefault();
+                if (event.keyCode === 13 && entered) {
+                    checkQuiz(selectedSite, input.dataset.id);
+                    input.removeEventListener("keydown", handler, false)
+                }
+            };
+            input.addEventListener("keydown", handler);
+            input.addEventListener("input", function () {
+                entered = false
+            });
+            check.addEventListener("click", function () {
+                if (entered) {
+                    checkQuiz(selectedSite, input.dataset.id);
+
+                } else {
+                    toast("warning", "please select a site")
+                }
+            });
+            retry.addEventListener("click", function () {
+                window.location.reload(true);
+            });
+            retry.addEventListener("click", function (event) {
+                if (event.keyCode === 13) {
+                    window.location.reload(true);
+                }
+            });
+
+        }
 
     }
 

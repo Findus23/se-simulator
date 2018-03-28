@@ -20,7 +20,7 @@ pre > code {
   display: flex;
   flex-direction: row;
   padding: 15px 5px 15px;
-  &:not(.question){
+  &:not(.question) {
     border-bottom: solid lightgray 1px;
   }
   border-right: solid 10px transparent;
@@ -104,10 +104,14 @@ h1, h2 {
   margin-top: 10px;
   color: inherit;
 }
-h2 {font-size: 18px}
+
+h2 {
+  font-size: 18px
+}
 
 .siteheader {
   background: #ebf2f5;
+  transition: background-color .3s, color .3s;
   display: flex;
   height: 50px;
   align-items: center;
@@ -115,4 +119,58 @@ h2 {font-size: 18px}
     margin-left: auto;
     color: inherit;
   }
+}
+
+.quizselector {
+  margin: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  > .awesomplete {
+    margin-right: 5px;
+    width: 70%;
+    input {
+      font-size: 20px;
+      width: 100%;
+    }
+  }
+}
+
+button {
+  height: 32px;
+  background-color: lightgray;
+  color: #606c76;
+  border: none;
+  transition: opacity .3s;
+  &:hover, &:focus {
+    opacity: .6;
+    background-color: lightgray;
+    color: #606c76;
+  }
+}
+
+#result {
+  > div {
+    width: 100%;
+    padding: 20px 0;
+    font-size: 25px;
+    text-align: center;
+    display: none;
+  }
+}
+
+#correct {
+  background-color: $success;
+}
+
+#incorrect {
+  background-color: $warning;
+}
+
+#stats {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  text-align: center;
+  padding: 20px 0;
 }

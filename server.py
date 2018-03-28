@@ -87,8 +87,23 @@ def quiz():
     print('{} ms'.format((time2 - time1) * 1000.0))
     return render_template(
         "quiz.html",
-        question=question
+        question=question,
+        stats=session["quiz"] if "quiz" in session else {"total": 0, "correct": 0}
     )
+
+
+@app.route("/api/quiz/<int:id>/<string:guess>", methods=["POST"])
+def quiz_api(id, guess):
+    if "quiz" not in session:
+        session["quiz"] = {"total": 0, "correct": 0}
+    session["quiz"]["total"] += 1
+    query = Question.select(Site).join(Site).where(Question.id == id).get()
+    if guess == query.site.url:
+        correct = True
+        session["quiz"]["correct"] += 1
+    else:
+        correct = False
+    return jsonify({"site": model_to_dict(query)["site"], "correct": correct})
 
 
 @app.route('/api/sites')

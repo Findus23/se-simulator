@@ -1,12 +1,40 @@
 {% extends "base.html" %}
 {% block body %}
 
-    <input id="siteselector" class="awesomplete" data-mode="quiz"/>
-    <button id="check">Check</button>
+    <header>
+        <h1>Stackexchange-Quiz</h1>
+    </header>
+
+
+
+    <div class="quizselector">
+        <input title="guess the correct site" id="siteselector" data-mode="quiz" data-id="{{ question.id }}"
+               autocomplete='off'>
+        <button id="check">Check</button>
+    </div>
+    <div id="result">
+        <div id="correct">
+            Correct!
+        </div>
+        <div id="incorrect">
+            Incorrect!
+        </div>
+    </div>
+    <div id="stats">
+        <div>Total<br><span>{{ stats.total }}</span></div>
+        <div>Correct<br><span>{{ stats.correct }}</span></div>
+        <div>Ratio<br><span>{{ '%d' | format((stats.correct / stats.total * 100) if stats.correct > 0 else 0) }}</span>%</div>
+        <button id="retry">Retry</button>
+    </div>
+
+    <header class="siteheader"
+            style="">
+    </header>
+
 
     <h1>{{ question.title.text }}</h1>
     <div class="content question">
-        <div class="vote">
+        <div class="vote" data-id="{{ question.id }}" data-type="question">
             <a class="up"></a>
             <div>{{ question.upvotes - question.downvotes }}</div>
             <a class="down"></a>
