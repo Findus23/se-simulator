@@ -9,7 +9,7 @@
 
         <a href="{{ url_for("index") }}">Clear filter</a>
     {% endif %}
-    {{ pagination(pagearray, num_pages, page, True) }}
+    {{ pagination(pagearray, num_pages, page, site.url if not site.fallback else None, True) }}
     {% for question in questions %}
         {% set vote=voted[("question", question.id)] %}
         <div class="content question"
@@ -34,5 +34,5 @@
             </div>
         </div>
     {% endfor %}
-    {{ pagination(pagearray, num_pages, page, False) }}
+    {{ pagination(pagearray, num_pages, page, site.url if not site.fallback else None, False) }}
 {% endblock %}
