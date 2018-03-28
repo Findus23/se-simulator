@@ -6,7 +6,7 @@ from playhouse.pool import PooledMySQLDatabase
 
 import config
 
-DATABASE = PooledMySQLDatabase("stackdata", **config.db)
+DATABASE = PooledMySQLDatabase("se-simulator", **config.db)
 
 
 # Create a Flask WSGI app and configure it using values from the module.
