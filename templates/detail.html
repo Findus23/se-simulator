@@ -27,7 +27,7 @@
     <h2 class="answerheader">{{ answers|length }} Answers</h2>
     {% for answer in answers %}
         {% set vote=voted[("answer", answer.id)] %}
-        <div class="content answer">
+        <div class="content answer" id="{{ answer.id }}">
             <div class="vote" data-id="{{ answer.id }}" data-type="answer" data-ranking="{{ answer.ci_lower_bound }}">
                 <a class="up {{ "active" if vote == True }}"></a>
                 <div>{{ answer.upvotes - answer.downvotes }}</div>
@@ -38,11 +38,11 @@
                     <p>{{ paragraph }}</p>
                 {% endfor %}
                 <div class="contentfooter">
-                    <div class="authorbox">
+                    <a href="{{ request.url }}#{{ answer.id }}" class="authorbox">
                         answered {{ prettydate(answer.datetime) }}
                         <br>
                         {{ answer.user.username }}
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>

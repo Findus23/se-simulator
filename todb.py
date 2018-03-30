@@ -1,6 +1,7 @@
 import random
 from datetime import datetime
 
+import sys
 from slugify import slugify
 
 import utils
@@ -62,7 +63,11 @@ def add_question(site, count=100):
 
 
 if __name__ == "__main__":
-    query = Site.select().where(Site.last_download.is_null(False))
+    if len(sys.argv) > 1:
+        sites = sys.argv[1:]
+        query = Site.select().where((Site.last_download.is_null(False)) & (Site.url.in_(sites)))
+    else:
+        query = Site.select().where(Site.last_download.is_null(False))
     for s in query:
         add_username(s)
         add_title(s)

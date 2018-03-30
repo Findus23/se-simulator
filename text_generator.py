@@ -58,8 +58,8 @@ def generate_chain(sourcedir, chainfile, mode):
 
 
 def get_chain(url, mode):
-    sourcedir = 'sites/{url}'.format(url=url, type=mode)
-    chainfile = 'sites/{url}/{type}.chain.json'.format(url=url, type=mode)
+    sourcedir = 'raw/{url}'.format(url=url, type=mode)
+    chainfile = 'chains/{url}/{type}.chain.json'.format(url=url, type=mode)
     if os.path.exists(chainfile):
         return load_chain(chainfile, mode)
     else:

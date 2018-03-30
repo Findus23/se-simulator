@@ -12,7 +12,7 @@ files = get_files()
 
 # TODO: name sites/id after real url
 
-for file in glob.glob("downloads/**/*.7z"):
+for file in glob.glob("downloads/**/*.7z", recursive=True):
     if "meta" in file:
         continue
     filename = os.path.basename(file)
@@ -46,8 +46,8 @@ for file in glob.glob("downloads/**/*.7z"):
     print(code)
     currentdir = os.getcwd()
     rawdir = "raw/" + code
-    sitesdir = "sites/" + code
-    for dir in [rawdir, sitesdir]:
+    chainsdir = "chains/" + code
+    for dir in [rawdir, chainsdir]:
         if not os.path.exists(dir):
             os.mkdir(dir)
 
@@ -57,7 +57,7 @@ for file in glob.glob("downloads/**/*.7z"):
     subprocess.check_output(["7z", "x", "-aoa", code + ".7z"])
     os.chdir(currentdir)
     print("Start parsing")
-    parse_posts(rawdir, sitesdir)
-    parse_comments(rawdir, sitesdir)
-    parse_usernames(rawdir, sitesdir)
+    parse_posts(rawdir, rawdir)
+    parse_comments(rawdir, rawdir)
+    parse_usernames(rawdir, rawdir)
     print("DONE")
