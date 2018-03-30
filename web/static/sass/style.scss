@@ -120,8 +120,7 @@ h2 {
     color: inherit;
   }
 }
-
-.quizselector {
+#quizselector {
   margin: 15px;
   display: flex;
   flex-direction: row;
@@ -134,6 +133,14 @@ h2 {
       width: 100%;
     }
   }
+}
+
+#quizchoices {
+  margin: 15px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 button {

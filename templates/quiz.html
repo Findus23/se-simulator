@@ -6,12 +6,21 @@
     </header>
 
 
-
-    <div class="quizselector">
-        <input title="guess the correct site" id="siteselector" data-mode="quiz" data-id="{{ question.id }}"
-               autocomplete='off'>
-        <button id="check">Check</button>
-    </div>
+    {% if difficulty=="easy" %}
+        <div id="quizchoices" data-id="{{ question.id }}">
+            {% for choice in choices %}
+                <button data-id="{{ choice.id }}" data-url="{{ choice.url }}"
+                        style="color: {{ choice.tag_foreground_color }};background-color: {{ choice.tag_background_color }}"
+                >{{ choice.name }}</button>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div id="quizselector">
+            <input title="guess the correct site" id="siteselector" data-mode="quiz" data-id="{{ question.id }}"
+                   autocomplete='off'>
+            <button id="check">Check</button>
+        </div>
+    {% endif %}
     <div id="result">
         <div id="correct">
             Correct!
@@ -23,7 +32,8 @@
     <div id="stats">
         <div>Total<br><span>{{ stats.total }}</span></div>
         <div>Correct<br><span>{{ stats.correct }}</span></div>
-        <div>Ratio<br><span>{{ '%d' | format((stats.correct / stats.total * 100) if stats.correct > 0 else 0) }}</span>%</div>
+        <div>Ratio<br><span>{{ '%d' | format((stats.correct / stats.total * 100) if stats.correct > 0 else 0) }}</span>%
+        </div>
         <button id="retry">Retry</button>
     </div>
 

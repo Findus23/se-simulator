@@ -1,7 +1,8 @@
-from datetime import datetime
 import time
+from random import shuffle
+
 import sass
-from flask import render_template, send_from_directory, abort, session, jsonify, make_response
+from flask import render_template, send_from_directory, abort, session, jsonify, make_response, redirect, url_for
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_session import Session
@@ -76,19 +77,39 @@ def question(slug):
     )
 
 
-@app.route('/quiz')
-def quiz():
+@app.route('/quiz/')
+def hello():
+    return redirect(url_for("quiz", difficulty="easy"), code=302)
+
+
+@app.route('/quiz/<string:difficulty>')
+def quiz(difficulty):
+    if difficulty not in ["easy", "hard"]:
+        return abort(404)
     time1 = time.time()
     question = Question.select(Question, Title, User, Site) \
         .join(Title).switch(Question) \
         .join(User).switch(Question) \
         .join(Site).where((Question.upvotes - Question.downvotes >= 0)).order_by(SQL("RAND()")).limit(1).get()
+    if difficulty == "easy":
+        sites = [question.site]
+        query = Site.select().where((Site.last_download.is_null(False)) & (Site.id != question.site.id)) \
+            .order_by(SQL("RAND()")).limit(3)
+        for site in query:
+            print(site)
+            sites.append(site)
+        print(len(sites))
+        shuffle(sites)
+    else:
+        sites = None
     time2 = time.time()
     print('{} ms'.format((time2 - time1) * 1000.0))
     return render_template(
         "quiz.html",
         question=question,
-        stats=session["quiz"] if "quiz" in session else {"total": 0, "correct": 0}
+        stats=session["quiz"] if "quiz" in session else {"total": 0, "correct": 0},
+        difficulty=difficulty,
+        choices=sites
     )
 
 

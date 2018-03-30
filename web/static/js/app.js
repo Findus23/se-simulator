@@ -30,16 +30,35 @@ document.addEventListener("DOMContentLoaded", function (event) {
     var check = document.getElementById("check");
     var header = document.getElementsByClassName("siteheader")[0];
     var retry = document.getElementById("retry");
+    var choices = document.getElementById("quizchoices");
     var selectedSite, headerimg, headertitle, entered;
 
     function toast(type, message) {
         console.warn(type, message)
     }
 
+    function setHeader(site, sure) {
+        while (header.firstChild) {
+            header.removeChild(header.firstChild);
+        }
+        headerimg = new Image(30, 30);
+        headerimg.src = site.icon_url;
+        headertitle = document.createElement('span');
+        headertitle.innerText = site.name + (sure ? "" : "?");
+        header.appendChild(headerimg);
+        header.appendChild(headertitle);
+    }
+
     function checkQuiz(selection, id) {
         console.info(selection, id);
-        input.disabled = true;
-        check.disabled = true;
+        if (input) {
+            input.disabled = true;
+            check.disabled = true;
+        } else {
+            [].forEach.call(choices.childNodes, function (child) {
+                child.disabled = true;
+            });
+        }
         var request = new XMLHttpRequest();
         request.open("POST", "/api/quiz/" + id + "/" + selection.url, true);
 
@@ -47,8 +66,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
             if (this.status >= 200 && this.status < 400) {
                 var resp = JSON.parse(this.response);
                 console.log(resp.correct);
-                headertitle.innerText = resp.site.name;
-                headerimg.src = resp.site.icon_url;
+                setHeader(resp.site, true);
+                // headertitle.innerText = resp.site.name;
+                // headerimg.src = resp.site.icon_url;
                 header.style.backgroundColor = resp.site.tag_background_color;
                 header.style.color = resp.site.link_color;
                 var result = document.getElementById(resp.correct ? "correct" : "incorrect");
@@ -112,15 +132,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
                         header.style.backgroundColor = selectedSite.tag_background_color;
                         check.style.color = selectedSite.link_color;
                         header.style.color = selectedSite.link_color;
-                        while (header.firstChild) {
-                            header.removeChild(header.firstChild);
-                        }
-                        headerimg = new Image(30, 30);
-                        headerimg.src = selectedSite.icon_url;
-                        headertitle = document.createElement('span');
-                        headertitle.innerText = selectedSite.name + "?";
-                        header.appendChild(headerimg);
-                        header.appendChild(headertitle);
+                        setHeader(selectedSite, false)
                     }
                 });
             } else {
@@ -133,6 +145,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         };
         request.send();
         if (mode === "quiz") {
+
             var handler = function (event) {
                 // event.preventDefault();
                 if (event.keyCode === 13 && entered) {
@@ -146,23 +159,29 @@ document.addEventListener("DOMContentLoaded", function (event) {
             });
             check.addEventListener("click", function () {
                 if (entered) {
-                    checkQuiz(selectedSite, input.dataset.id);
+                    checkQuiz(selectedSite, input.dataset.id, true);
 
                 } else {
                     toast("warning", "please select a site")
                 }
             });
-            retry.addEventListener("click", function () {
-                window.location.reload(true);
-            });
-            retry.addEventListener("click", function (event) {
-                if (event.keyCode === 13) {
-                    window.location.reload(true);
-                }
-            });
-
         }
 
+    } else if (choices) {
+        console.info("TEST");
+        choices.addEventListener('click', function (e) {
+            if (e.target.tagName === "BUTTON") {
+                var data = e.target.dataset;
+                checkQuiz({url: data.url}, choices.dataset.id);
+            }
+        })
     }
-
+    retry.addEventListener("click", function () {
+        window.location.reload(true);
+    });
+    retry.addEventListener("click", function (event) {
+        if (event.keyCode === 13) {
+            window.location.reload(true);
+        }
+    });
 });
