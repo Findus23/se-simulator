@@ -3,8 +3,10 @@
 {% block body %}
     {{ siteheader(site) }}
 
-    <label class="label-inline" for="siteselector">Seite</label>
-    <input id="siteselector" class="awesomplete" value="{{ site.url if not site.fallback }}" data-mode="filter"/>
+    <div class="filterwrapper">
+        <label class="label-inline" for="siteselector">Seite</label>
+        <input id="siteselector" class="awesomplete" value="{{ site.url if not site.fallback }}" data-mode="filter"/>
+    </div>
     {% if not site.fallback %}
 
         <a href="{{ url_for("index") }}">Clear filter</a>
@@ -20,16 +22,20 @@
                 <a class="down {{ "active" if vote == False }}"></a>
             </div>
             <div class="contentbox">
-                <a href="https://{{ question.site.url }}" class="sitename" target="_blank" rel="noopener">
-                    {{ question.site.name }}
-                </a>
                 <div>
                     <a class="title" style="color:{{ question.site.link_color }}"
                        href="{{ url_for("question",slug=question.title.slug) }}">{{ question.title.text }}</a>
                 </div>
                 {{ question.text|truncate(200, False, ' …', 10) }}
-                <div class="date">
-                    asked {{ prettydate(question.datetime) }} by {{ question.user.username }}
+                <div class="rightwrapper">
+                    <div class="metadata">
+                        asked {{ prettydate(question.datetime) }} by {{ question.user.username }}
+                        <br>
+                        on
+                        <a href="https://{{ question.site.url }}" class="sitename" target="_blank" rel="noopener">
+                            {{ question.site.name }}
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

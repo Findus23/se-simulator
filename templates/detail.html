@@ -7,7 +7,7 @@
     {{ siteheader(question.site) }}
     <h1>{{ question.title.text }}</h1>
     {% set vote=voted[("question", question.id)] %}
-    <div class="content question">
+    <div class="content question singlequestion">
         <div class="vote" data-id="{{ question.id }}" data-type="question">
             <a class="up {{ "active" if vote == True }}"></a>
             <div>{{ question.upvotes - question.downvotes }}</div>

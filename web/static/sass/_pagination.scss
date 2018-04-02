@@ -1,28 +1,42 @@
 .pagination {
+  $color: #f69c55;
   &.top {
   }
   &.bottom {
   }
+  margin: 20px 0;
 
   a {
     .mobile {
       display: none;
     }
 
-    font-size: 18px;
+    font-size: 16px;
+    color: gray;
     display: inline-block;
-    padding: 8px 20px;
-    margin-left: -5px;
+    padding: 2px 10px;
+    border: thin lightgray solid;
+    margin: 0 2px;
+    &.dots {
+      border: none;
+      padding: 0;
+    }
+    transition: color .3s, background-color .3s;
 
     svg {
+      transition: fill .3s;
       height: 18px;
       vertical-align: middle;
+      fill: gray;
     }
 
-    @media (min-width: 500px) {
+    @include desktop-only {
       &:hover:not(.disabled), &.active {
-        color: $primary-dark;
-        border-bottom: 3px solid;
+        color: white;
+        background-color: $color;
+        svg {
+          fill: white;
+        }
       }
     }
 
@@ -34,9 +48,9 @@
       }
     }
 
-    @media (max-width: $mobile-width) {
+    @include mobile-only {
       &.active::before {
-        content: "Seite ";
+        content: "page ";
       }
 
       &.other {
