@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% from 'macros.html' import siteheader %}
+{% block title %}
+    {{ question.title.text }} - Stackexchange Simulator
+{% endblock %}
 {% block body %}
     {{ siteheader(question.site) }}
     <h1>{{ question.title.text }}</h1>
