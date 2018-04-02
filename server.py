@@ -208,4 +208,13 @@ if __name__ == '__main__':
     app.run()
 
 else:
-    sass.compile(dirname=('web/static/sass', 'web/static/css'), output_style='compressed')
+    css, sourcemap = sass.compile(
+        filename='web/static/sass/style.scss',
+        output_style='compressed',
+        source_map_filename='web/static/css/style.css.map'
+    )
+    with open('web/static/css/style.css', 'w') as style_css:
+        style_css.write(css)
+    with open('web/static/css/style.css.map', 'w') as style_css_map:
+        style_css_map.write(sourcemap)
+
