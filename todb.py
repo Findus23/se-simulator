@@ -15,6 +15,7 @@ def get_unused_users(site, count):
 
 
 def add_username(site, count=500):
+    print("usernames")
     chain = get_chain(site.url, "Usernames")
     for _ in range(count):
         username = generate_text(chain, "Usernames")
@@ -22,6 +23,7 @@ def add_username(site, count=500):
 
 
 def add_title(site, count=100):
+    print("titles")
     # TODO: Make sure that every slug is unique
     chain = get_chain(site.url, "Titles")
     for _ in range(count):
@@ -31,6 +33,7 @@ def add_title(site, count=100):
 
 
 def add_answer(site, count=300):
+    print("answers")
     users = get_unused_users(site, count)
     chain = get_chain(site.url, "Answers")
 
@@ -42,6 +45,7 @@ def add_answer(site, count=300):
 
 
 def add_question(site, count=100):
+    print("Questions")
     users = get_unused_users(site, count)
     titles = Title.select().join(Question, JOIN.LEFT_OUTER) \
         .where((Title.site == site) & (Question.id.is_null())) \
@@ -67,8 +71,11 @@ if __name__ == "__main__":
         sites = sys.argv[1:]
         query = Site.select().where((Site.last_download.is_null(False)) & (Site.url.in_(sites)))
     else:
-        query = Site.select().where(Site.last_download.is_null(False))
+        query = Site.select().join(Question, JOIN.LEFT_OUTER).where(
+            (Question.id.is_null()) & (Site.last_download.is_null(False))).limit(10)
+        print([i.name for i in query])
     for s in query:
+        print(s.name)
         add_username(s)
         add_title(s)
         add_answer(s)

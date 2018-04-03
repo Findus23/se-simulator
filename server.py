@@ -138,8 +138,7 @@ def sites():
 
 @app.route('/test')
 def sdfdsfds():
-    return jsonify(
-        model_to_dict(Answer.select().where((Answer.question.is_null())).get()))
+    return ""
 
 
 @app.route('/api/vote/<string:type>/<int:id>/<string:vote>', methods=["POST"])
@@ -217,4 +216,3 @@ else:
         style_css.write(css)
     with open('web/static/css/style.css.map', 'w') as style_css_map:
         style_css_map.write(sourcemap)
-

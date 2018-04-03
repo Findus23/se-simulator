@@ -28,7 +28,7 @@ def parse_posts(inputdir, outputdir):
                     answers.write(text)
             element.clear()
             if i % 100 == 0:
-                print(i)
+                print(i, end="\r")
             i += 1
     print_stats(i, skipped)
 
@@ -43,7 +43,7 @@ def parse_comments(inputdir, outputdir):
                 comments.write(text)
             element.clear()
             if i % 100 == 0:
-                print(i)
+                print(i, end="\r")
             i += 1
     print_stats(i)
 
@@ -58,7 +58,7 @@ def parse_usernames(inputdir, outputdir):
                 usernames.write(displayname)
             element.clear()
             if i % 100 == 0:
-                print(i)
+                print(i, end="\r")
             i += 1
     print_stats(i)
 

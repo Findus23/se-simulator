@@ -40,7 +40,7 @@ def generate_chain(sourcedir, chainfile, mode):
                 continue
             chainlist.append(chain)
             if i % 100 == 0:
-                print(i)
+                print(i, end="\r")
             if i % 1000 == 0:
                 subtotal_chain = markovify.combine(chainlist)
                 if not combined_cains:
