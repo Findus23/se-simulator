@@ -209,3 +209,12 @@ footer {
     
   }
 }
+
+:target {
+  animation: target-fade 3s 1;
+}
+
+@keyframes target-fade {
+  0% { background-color: rgba(0,0,0,.1); }
+  100% { background-color: rgba(0,0,0,0); }
+}

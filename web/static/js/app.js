@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     var input = document.getElementById("siteselector");
     var check = document.getElementById("check");
     var header = document.getElementsByClassName("siteheader")[0];
-    var retry = document.getElementById("retry");
+    var next = document.getElementById("next");
     var choices = document.getElementById("quizchoices");
     var selectedSite, headerimg, headertitle, entered;
 
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 header.style.color = resp.site.link_color;
                 var result = document.getElementById(resp.correct ? "correct" : "incorrect");
                 result.style.display = "block";
-                retry.focus()
+                next.focus()
             } else {
                 // We reached our target server, but it returned an error
 
@@ -176,12 +176,14 @@ document.addEventListener("DOMContentLoaded", function (event) {
             }
         })
     }
-    retry.addEventListener("click", function () {
-        window.location.reload(true);
-    });
-    retry.addEventListener("click", function (event) {
-        if (event.keyCode === 13) {
+    if (next) {
+        next.addEventListener("click", function () {
             window.location.reload(true);
-        }
-    });
+        });
+        next.addEventListener("click", function (event) {
+            if (event.keyCode === 13) {
+                window.location.reload(true);
+            }
+        });
+    }
 });

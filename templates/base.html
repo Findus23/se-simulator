@@ -1,7 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
+<html lang="de">
 <head>
     <meta name="robots" content="noindex, nofollow">
     <title>{% block title %}Stackexchange Simulator{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     {% if config['DEBUG'] %}
         <link href="{{ url_for('static', filename='css/style.scss.css') }}" rel="stylesheet" type="text/css">
     {% else %}
@@ -23,3 +25,4 @@
 <script src="{{ url_for('static', filename='js/awesomplete.min.js') }}"></script>
 
 </body>
+</html>
