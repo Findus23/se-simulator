@@ -15,7 +15,7 @@
     {% for question in questions %}
         {% set vote=voted[("question", question.id)] %}
         <div class="content question"
-             style="border-right-color:{{ question.site.tag_foreground_color }};background-color:{{ question.site.tag_background_color }}">
+             style="border-right-color:{{ question.site.primary_color }}">
             <div class="vote" data-id="{{ question.id }}" data-type="question">
                 <a class="up {{ "active" if vote == True }}"></a>
                 <div>{{ question.upvotes - question.downvotes }}</div>
@@ -23,7 +23,7 @@
             </div>
             <div class="contentbox">
                 <div>
-                    <a class="title" style="color:{{ question.site.link_color }}"
+                    <a class="title" style=""
                        href="{{ url_for("question",slug=question.title.slug) }}">{{ question.title.text }}</a>
                 </div>
                 {{ question.text|truncate(200, False, ' …', 10) }}

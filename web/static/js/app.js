@@ -69,8 +69,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 setHeader(resp.site, true);
                 // headertitle.innerText = resp.site.name;
                 // headerimg.src = resp.site.icon_url;
-                header.style.backgroundColor = resp.site.tag_background_color;
-                header.style.color = resp.site.link_color;
+                header.style.backgroundColor = resp.site.background_color;
+                header.style.color = resp.site.foreground_color;
                 var result = document.getElementById(resp.correct ? "correct" : "incorrect");
                 result.style.display = "block";
                 next.focus()
@@ -128,10 +128,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
                         entered = true;
                         console.log(selectedSite);
-                        check.style.backgroundColor = selectedSite.tag_background_color;
-                        header.style.backgroundColor = selectedSite.tag_background_color;
-                        check.style.color = selectedSite.link_color;
-                        header.style.color = selectedSite.link_color;
+                        check.style.backgroundColor = selectedSite.background_color;
+                        header.style.backgroundColor = selectedSite.background_color;
+                        check.style.color = selectedSite.foreground_color;
+                        header.style.color = selectedSite.foreground_color;
                         setHeader(selectedSite, false)
                     }
                 });

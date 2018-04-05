@@ -114,5 +114,21 @@ def get_fallback_site():
         "name": "Stack Exchange",
         "url": "stackexchange.com/",
         "icon_url": "https://cdn.sstatic.net/Sites/stackexchange/img/apple-touch-icon.png",
-        "fallback": True
+        "fallback": True,
+        "background_color": False,
+        "foreground_color": False,
+        "primary_color": False
     }
+
+
+def hex_to_rgb(hex):
+    """ https://stackoverflow.com/a/29643643 """
+    return tuple(int(hex[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def is_light_color(hex):
+    """ https://stackoverflow.com/a/596241 """
+    r, g, b = hex_to_rgb(hex[1:])
+    brightness = 0.2126 * r + 0.7152 * g + 0.0722 * b
+    print(brightness)
+    return brightness > 245

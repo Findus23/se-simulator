@@ -16,6 +16,7 @@ from app import app
 from models import *
 
 app.jinja_env.globals.update(prettydate=utils.prettydate)
+app.jinja_env.globals.update(is_light_color=utils.is_light_color)
 
 SESSION_TYPE = 'redis'
 SESSION_COOKIE_SECURE = config.production

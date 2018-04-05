@@ -12,6 +12,9 @@ class Site(BaseModel):
     tag_background_color = CharField(max_length=7)
     tag_foreground_color = CharField(max_length=7)
     link_color = CharField(max_length=7)
+    background_color = CharField(max_length=7, null=True)
+    foreground_color = CharField(max_length=7, null=True)
+    primary_color = CharField(max_length=7, null=True)
     enabled = BooleanField(default=True)
 
 

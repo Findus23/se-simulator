@@ -44,8 +44,8 @@
 
 {% macro siteheader(site) %}
 <header class="siteheader"
-        style="background-color: {{ site.tag_background_color if site.tag_background_color!="#FFF" }};
-                color: {{ site.link_color }}">
+        style="background-color: {{ site.background_color }};
+                color: {{ site.foreground_color }}">
     <img src="{{ site.icon_url }}" width="30" height="30">
     <span>{{ site.name }}</span>
     <a class="gotolink" href="https://{{ site.url }}" target="_blank" rel="noopener">Go to site</a>
