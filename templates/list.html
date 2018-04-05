@@ -32,7 +32,7 @@
                         asked {{ prettydate(question.datetime) }} by {{ question.user.username }}
                         <br>
                         on
-                        <a href="https://{{ question.site.url }}" class="sitename" target="_blank" rel="noopener">
+                        <a href="{{ url_for("index",site=question.site.url) }}" class="sitename">
                             {{ question.site.name }}
                         </a>
                     </div>

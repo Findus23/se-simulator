@@ -36,7 +36,9 @@ pre > code {
   &:not(.singlequestion) {
     border-bottom: solid lightgray 1px;
   }
-  border-right: solid 10px transparent;
+  &.question:not(.singlequestion) {
+    border-right: solid 10px lightgray;
+  }
   .contentbox {
     margin-left: 10px;
     width: 100%;
@@ -56,6 +58,7 @@ pre > code {
       .metadata {
         font-size: 12px;
         color: grey;
+        text-align: right;
       }
     }
     .contentfooter {
@@ -130,9 +133,18 @@ h2 {
   display: flex;
   height: 50px;
   align-items: center;
+  padding: 0 10px;
+  a {
+    color: inherit;
+  }
   .gotolink {
     margin-left: auto;
-    color: inherit;
+  }
+  img {
+    background: rgba(255, 255, 255, 0.5);
+    padding: 5px;
+    border-radius: 50%;
+    margin-right: 10px;
   }
 }
 
@@ -199,7 +211,6 @@ button {
   padding: 20px 0;
 }
 
-
 footer {
   padding: 1rem 2rem;
   display: flex;
@@ -207,7 +218,7 @@ footer {
   justify-content: space-between;
   a {
     color: #111;
-    
+
   }
 }
 
@@ -216,6 +227,10 @@ footer {
 }
 
 @keyframes target-fade {
-  0% { background-color: rgba(0,0,0,.1); }
-  100% { background-color: rgba(0,0,0,0); }
+  0% {
+    background-color: rgba(0, 0, 0, .1);
+  }
+  100% {
+    background-color: rgba(0, 0, 0, 0);
+  }
 }

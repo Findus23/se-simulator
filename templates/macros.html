@@ -1,6 +1,7 @@
 {% macro printpage(i,active, site) %}
     {#    <a href="/projekte/{{ i }}/" class="{{ "active" if i == active else "other" }}">{{ i }}</a>#}
-    <a href="{{url_for("index", page=i, site=site)}}" class="{{ "active" if i == active|string() else "other" }}">{{ i }}</a>
+    <a href="{{ url_for("index", page=i, site=site) }}"
+       class="{{ "active" if i == active|string() else "other" }}">{{ i }}</a>
 {% endmacro %}
 
 {% macro pagination(pagearray, num_pages, page, site, top) %}
@@ -43,11 +44,14 @@
 {%- endmacro %}
 
 {% macro siteheader(site) %}
-<header class="siteheader"
-        style="background-color: {{ site.background_color }};
-                color: {{ site.foreground_color }}">
-    <img src="{{ site.icon_url }}" width="30" height="30">
-    <span>{{ site.name }}</span>
-    <a class="gotolink" href="https://{{ site.url }}" target="_blank" rel="noopener">Go to site</a>
-</header>
+    <header class="siteheader"
+            style="background-color: {{ site.background_color }};
+                    color: {{ site.foreground_color }}">
+        <img src="{{ site.icon_url }}" width="40" height="40">
+
+        <a href="{{ url_for("index", site=site.url) }}">
+            <span>{{ site.name }}</span>
+        </a>
+        <a class="gotolink" href="https://{{ site.url }}" target="_blank" rel="noopener">Go to site</a>
+    </header>
 {% endmacro %}
