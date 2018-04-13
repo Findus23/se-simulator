@@ -1,3 +1,4 @@
+import subprocess
 import time
 from random import shuffle
 
@@ -31,6 +32,10 @@ limiter = Limiter(
     key_func=get_remote_address,
     headers_enabled=True
 )
+
+@app.context_processor
+def git_hash():
+    return dict(git_hash=subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode().strip())
 
 
 @app.route('/')
