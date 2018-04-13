@@ -55,12 +55,15 @@ document.addEventListener("DOMContentLoaded", function (event) {
             input.disabled = true;
             check.disabled = true;
         } else {
-            [].forEach.call(choices.childNodes, function (child) {
+            [].forEach.call(choices.children, function (child) {
+                if (selection.url === child.dataset.url) {
+                    child.classList.add("selection")
+                }
                 child.disabled = true;
             });
         }
         var request = new XMLHttpRequest();
-        request.open("POST", "/api/quiz/" + id + "/" + selection.url, true);
+        request.open("POST", "/api/quiz/" + id + "/" + selection.url + "/" + (input ? "hard" : "easy"), true);
 
         request.onload = function () {
             if (this.status >= 200 && this.status < 400) {

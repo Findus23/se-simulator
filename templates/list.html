@@ -3,14 +3,20 @@
 {% block body %}
     {{ siteheader(site) }}
 
-    <div class="filterwrapper">
-        <label class="label-inline" for="siteselector">Seite</label>
-        <input id="siteselector" class="awesomplete" value="{{ site.url if not site.fallback }}" data-mode="filter"/>
+    <div id="filterwrapper"
+         style="background-color: {{ site.background_color }}; color: {{ site.foreground_color }}">
+        <input id="siteselector" class="awesomplete" value="{{ site.url if not site.fallback }}"
+               data-mode="filter" title="filter by page" placeholder="filter by page"
+               style="" type="search"/>
+        {% if not site.fallback %}
+            <a href="{{ url_for("index") }}" class="clear"><span>Clear</span></a>
+        {% endif %}
     </div>
-    {% if not site.fallback %}
-
-        <a href="{{ url_for("index") }}">Clear filter</a>
-    {% endif %}
+    <div id="quizteaster"
+         style="background-color: {{ site.background_color }}; color: {{ site.foreground_color }}">
+        <a href="{{ url_for("quiz", difficulty="easy") }}">Easy Quiz</a>
+        <a href="{{ url_for("quiz", difficulty="hard") }}">Hard Quiz</a>
+    </div>
     {{ pagination(pagearray, num_pages, page, site.url if not site.fallback else None, True) }}
     {% for question in questions %}
         {% set vote=voted[("question", question.id)] %}

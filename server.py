@@ -97,9 +97,7 @@ def quiz(difficulty):
         query = Site.select().where((Site.last_download.is_null(False)) & (Site.id != question.site.id)) \
             .order_by(SQL("RAND()")).limit(3)
         for site in query:
-            print(site)
             sites.append(site)
-        print(len(sites))
         shuffle(sites)
     else:
         sites = None
@@ -108,21 +106,23 @@ def quiz(difficulty):
     return render_template(
         "quiz.html",
         question=question,
-        stats=session["quiz"] if "quiz" in session else {"total": 0, "correct": 0},
+        stats=session["quiz"][difficulty] if "quiz" in session else {"total": 0, "correct": 0},
         difficulty=difficulty,
         choices=sites
     )
 
 
-@app.route("/api/quiz/<int:id>/<string:guess>", methods=["POST"])
-def quiz_api(id, guess):
+@app.route("/api/quiz/<int:id>/<string:guess>/<string:difficulty>", methods=["POST"])
+def quiz_api(id, guess, difficulty):
+    if difficulty not in ["easy", "hard"]:
+        return abort(404)
     if "quiz" not in session:
-        session["quiz"] = {"total": 0, "correct": 0}
-    session["quiz"]["total"] += 1
+        session["quiz"] = {"easy": {"total": 0, "correct": 0}, "hard": {"total": 0, "correct": 0}}
+    session["quiz"][difficulty]["total"] += 1
     query = Question.select(Site).join(Site).where(Question.id == id).get()
     if guess == query.site.url:
         correct = True
-        session["quiz"]["correct"] += 1
+        session["quiz"][difficulty]["correct"] += 1
     else:
         correct = False
     return jsonify({"site": model_to_dict(query)["site"], "correct": correct})

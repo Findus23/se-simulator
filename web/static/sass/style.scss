@@ -1,6 +1,4 @@
-$link-color: #07C;
-$link-hover-color: #3af;
-$mobile-break-point: 500px;
+@import "variables";
 
 @mixin mobile-only() {
   @media (max-width: $mobile-break-point) {
@@ -128,7 +126,7 @@ h2 {
 }
 
 .siteheader {
-  background: #ebf2f5;
+  background: $stackexchange-blue;
   transition: background-color .3s, color .3s;
   display: flex;
   height: 50px;
@@ -170,10 +168,12 @@ h2 {
   flex-direction: row;
   justify-content: space-between;
   flex-wrap: wrap;
+  button.selection {
+    opacity: 1;
+  }
 }
 
 button {
-  height: 32px;
   background-color: lightgray;
   color: #606c76;
   border: none;
@@ -183,6 +183,18 @@ button {
     background-color: lightgray;
     color: #606c76;
   }
+  &:disabled {
+    &:hover, &:active, &:focus {
+      background-color: lightgray;
+      color: #606c76;
+      opacity: 0.5;
+    }
+  }
+}
+
+#check {
+  height: 32px;
+  line-height: 32px;
 }
 
 #result {
@@ -232,5 +244,96 @@ footer {
   }
   100% {
     background-color: rgba(0, 0, 0, 0);
+  }
+}
+
+#filterwrapper {
+  background-color: $stackexchange-blue;
+  display: flex;
+  justify-content: center;
+  input {
+    color: currentColor;
+    background: inherit;
+    border-radius: 0;
+    transition: all .3s;
+    padding: 10px;
+    &:hover, &:focus {
+      background-color: white;
+      color: #606c76;
+      border-color: lightgray;
+    }
+
+  }
+  .clear {
+    @extend input;
+    padding: 0 10px;
+    display: flex;
+    border: 0.1rem solid #d1d1d1;
+    border-left: none;
+    span {
+      align-self: center;
+    }
+  }
+  ::placeholder {
+    color: #666
+  }
+
+}
+
+#quizteaster {
+  display: flex;
+  background-color: $stackexchange-blue;
+  a {
+    border: 1px lightgray;
+    border-top-style: solid;
+    &:first-child {
+      border-right-style: solid;
+    }
+    display: block;
+    flex-basis: 50%;
+    text-align: center;
+    color: inherit;
+    padding: 10px;
+    transition: all .3s;
+    &:hover, &:focus {
+      background-color: white;
+      color: #606c76;
+    }
+  }
+}
+
+html.quiz {
+  min-height: 100vh;
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .container {
+  }
+}
+
+.tutorial {
+  margin: 10px 0;
+  padding: 5px;
+  border: solid 1px lightgray;
+  border-right-width: 4px;
+  background-color: #ffffe0;
+  h3 {
+    font-size: 20px
+  }
+  p {
+    margin-bottom: 3px;
+  }
+  strong {
+    font-weight: 700;
+  }
+  a {
+    color: inherit;
+    font-weight: 700;
+    &:hover, &:focus, &:active {
+      text-decoration: underline;
+    }
   }
 }
