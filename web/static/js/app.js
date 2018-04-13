@@ -181,11 +181,11 @@ document.addEventListener("DOMContentLoaded", function (event) {
     }
     if (next) {
         next.addEventListener("click", function () {
-            window.location.reload(true);
+            window.location.reload(false);
         });
         next.addEventListener("click", function (event) {
             if (event.keyCode === 13) {
-                window.location.reload(true);
+                window.location.reload(false);
             }
         });
     }
