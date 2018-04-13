@@ -57,8 +57,7 @@ def add_question(site, count=100):
         title = titles[i]
         user = users[i]
         time = datetime.now()
-        question = Question.create(text=text, title_id=title, user_id=user, site_id=site, datetime=time,
-                                   random=utils.rand())
+        question = Question.create(text=text, title_id=title, user_id=user, site_id=site, datetime=time)
         num_answers = random.randint(1, 4)
         answers = Answer.select().where((Answer.site == site) & (Answer.question.is_null())).limit(num_answers)
         for answer in answers:

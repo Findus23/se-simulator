@@ -20,6 +20,11 @@ body {
   font-size: 15px;
   color: #111;
 }
+@media (max-width: 40rem){
+  .container {
+    margin: 0 10px;
+  }
+}
 
 pre > code {
   white-space: pre-wrap;

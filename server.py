@@ -1,6 +1,6 @@
 import subprocess
 import time
-from random import shuffle
+from random import shuffle, randint
 
 import sass
 from flask import render_template, send_from_directory, abort, session, jsonify, make_response, redirect, url_for
@@ -32,6 +32,9 @@ limiter = Limiter(
     key_func=get_remote_address,
     headers_enabled=True
 )
+
+question_count = utils.load_question_count()
+
 
 @app.context_processor
 def git_hash():
@@ -93,10 +96,18 @@ def quiz(difficulty):
     if difficulty not in ["easy", "hard"]:
         return abort(404)
     time1 = time.time()
-    question = Question.select(Question, Title, User, Site) \
-        .join(Title).switch(Question) \
-        .join(User).switch(Question) \
-        .join(Site).where((Question.upvotes - Question.downvotes >= 0)).order_by(SQL("RAND()")).limit(1).get()
+    while True:
+        random = randint(0, question_count - 1)
+        print(random)
+        try:
+            question = Question.select(Question, Title, User, Site) \
+                .join(Title).switch(Question) \
+                .join(User).switch(Question) \
+                .join(Site).where((Question.upvotes - Question.downvotes >= 0) & (Question.random == random)).get()
+        except DoesNotExist:
+            continue
+        break
+
     if difficulty == "easy":
         sites = [question.site]
         query = Site.select().where((Site.last_download.is_null(False)) & (Site.id != question.site.id)) \

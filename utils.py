@@ -130,5 +130,14 @@ def is_light_color(hex):
     """ https://stackoverflow.com/a/596241 """
     r, g, b = hex_to_rgb(hex[1:])
     brightness = 0.2126 * r + 0.7152 * g + 0.0722 * b
-    print(brightness)
     return brightness > 245
+
+
+def save_question_count(count):
+    with open('count.txt', 'w') as f:
+        f.write(str(count))
+
+
+def load_question_count():
+    with open('count.txt', 'r') as f:
+        return int(f.readline())
