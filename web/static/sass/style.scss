@@ -53,7 +53,7 @@ pre > code {
     .rightwrapper {
       display: flex;
       flex-direction: row;
-      justify-content: right;
+      justify-content: flex-end;
       @include mobile-only {
         justify-content: left;
       }
