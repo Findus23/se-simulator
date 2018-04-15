@@ -341,3 +341,34 @@ html.quiz {
     }
   }
 }
+
+#infowrapper {
+  position: fixed;
+  bottom: 20px;
+  right: auto;
+  left: auto;
+  width: 100%;
+  padding: 0 10px;
+  > div {
+    position: relative;
+    margin: 0 auto;
+    max-width: 130.0rem;
+    background: lightyellow;
+    padding: 25px;
+    box-shadow: 2px 2px 5px 0 rgba(50, 50, 50, 0.4);
+    p:last-of-type {
+      margin: 0;
+    }
+    .close {
+      position: absolute;
+      padding: 10px;
+      top: 0;
+      right: 0;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    footer {
+      padding: 1rem 0 0;
+    }
+  }
+}

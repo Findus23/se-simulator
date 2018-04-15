@@ -3,7 +3,8 @@ import time
 from random import shuffle, randint
 
 import sass
-from flask import render_template, send_from_directory, abort, session, jsonify, make_response, redirect, url_for
+from flask import render_template, send_from_directory, abort, session, jsonify, make_response, redirect, url_for, \
+    request
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_session import Session
@@ -64,7 +65,8 @@ def index(site=None):
         page=paginated_query.get_page(),
         questions=paginated_query.get_object_list(),
         site=site_element,
-        voted=session["voted"] if "voted" in session and not config.make_cacheable else None
+        voted=session["voted"] if "voted" in session and not config.make_cacheable else None,
+        infohidden="hide" in request.cookies
     )
 
 
@@ -82,7 +84,8 @@ def question(slug):
         "detail.html",
         question=question,
         answers=answers,
-        voted=session["voted"] if "voted" in session and not config.make_cacheable else None
+        voted=session["voted"] if "voted" in session and not config.make_cacheable else None,
+        infohidden="hide" in request.cookies
     )
 
 
@@ -124,7 +127,8 @@ def quiz(difficulty):
         question=question,
         stats=session["quiz"][difficulty] if "quiz" in session else {"total": 0, "correct": 0},
         difficulty=difficulty,
-        choices=sites
+        choices=sites,
+        infohidden="hide" in request.cookies
     )
 
 

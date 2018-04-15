@@ -40,8 +40,28 @@
     {% block body %}{% endblock %}
     <footer>
         <div><a href="https://lw1.at/i">Imprint and Privacy Policy</a></div>
+        <div ><a href="#" id="showdisclaimer">Disclaimer</a></div>
         <div><a href="https://lw1.at/" target="_blank">About me and other projects</a></div>
     </footer>
+</div>
+<div id="infowrapper"{% if infohidden %} style="display: none"{% endif %}>
+    <div>
+        <span id="closeinfo" class="close" aria-label="Close" role="button" tabindex="1">&times;</span>
+        <p>
+            This site is not affiliated with Stack Exchange, Stack Overflow or any of their family of sites.
+            Site names and logos are &copy; Stack Overflow Inc.
+            The data used to produce this page and therefore all data on this site is licensed under
+            <a href="https://creativecommons.org/licenses/by-sa/3.0/">Creative Commons BY-SA 3.0</a>.
+        </p>
+        <p>
+            The content of this website shouldn't be taken too seriously as everything got randomly generated based on
+            original questions and answers.
+        </p>
+        <footer>
+            <div><a href="https://lw1.at/i">Imprint and Privacy Policy</a></div>
+            <div><a href="https://lw1.at/" target="_blank">About me and other projects</a></div>
+        </footer>
+    </div>
 </div>
 <script src="{{ url_for('static', filename='js/app.js') }}?hash={{ git_hash }}"></script>
 <script src="{{ url_for('static', filename='js/awesomplete.min.js') }}?hash={{ git_hash }}"></script>

@@ -31,6 +31,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
     var header = document.getElementsByClassName("siteheader")[0];
     var next = document.getElementById("next");
     var choices = document.getElementById("quizchoices");
+    var info = document.getElementById("infowrapper");
+    var close = document.getElementById("closeinfo");
     var selectedSite, headerimg, headertitle, entered;
 
     function toast(type, message) {
@@ -189,4 +191,11 @@ document.addEventListener("DOMContentLoaded", function (event) {
             }
         });
     }
+    close.addEventListener("click", function (ev) {
+        info.style.display = "none";
+        document.cookie = "hide = 1;secure";
+    });
+    document.getElementById("showdisclaimer").addEventListener("click", function (ev) {
+        info.style.display = "block"
+    })
 });
