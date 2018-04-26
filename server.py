@@ -1,8 +1,10 @@
+import subprocess
 import time
-from random import shuffle
+from random import shuffle, randint
 
 import sass
-from flask import render_template, send_from_directory, abort, session, jsonify, make_response, redirect, url_for
+from flask import render_template, send_from_directory, abort, session, jsonify, make_response, redirect, url_for, \
+    request
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_session import Session
@@ -32,6 +34,13 @@ limiter = Limiter(
     headers_enabled=True
 )
 
+question_count = utils.load_question_count()
+
+
+@app.context_processor
+def git_hash():
+    return dict(git_hash=subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode().strip())
+
 
 @app.route('/')
 @app.route('/s/<string:site>')
@@ -56,7 +65,8 @@ def index(site=None):
         page=paginated_query.get_page(),
         questions=paginated_query.get_object_list(),
         site=site_element,
-        voted=session["voted"] if "voted" in session and not config.make_cacheable else None
+        voted=session["voted"] if "voted" in session and not config.make_cacheable else None,
+        infohidden="hide" in request.cookies
     )
 
 
@@ -74,7 +84,8 @@ def question(slug):
         "detail.html",
         question=question,
         answers=answers,
-        voted=session["voted"] if "voted" in session and not config.make_cacheable else None
+        voted=session["voted"] if "voted" in session and not config.make_cacheable else None,
+        infohidden="hide" in request.cookies
     )
 
 
@@ -88,18 +99,24 @@ def quiz(difficulty):
     if difficulty not in ["easy", "hard"]:
         return abort(404)
     time1 = time.time()
-    question = Question.select(Question, Title, User, Site) \
-        .join(Title).switch(Question) \
-        .join(User).switch(Question) \
-        .join(Site).where((Question.upvotes - Question.downvotes >= 0)).order_by(SQL("RAND()")).limit(1).get()
+    while True:
+        random = randint(0, question_count - 1)
+        print(random)
+        try:
+            question = Question.select(Question, Title, User, Site) \
+                .join(Title).switch(Question) \
+                .join(User).switch(Question) \
+                .join(Site).where((Question.upvotes - Question.downvotes >= 0) & (Question.random == random)).get()
+        except DoesNotExist:
+            continue
+        break
+
     if difficulty == "easy":
         sites = [question.site]
         query = Site.select().where((Site.last_download.is_null(False)) & (Site.id != question.site.id)) \
             .order_by(SQL("RAND()")).limit(3)
         for site in query:
-            print(site)
             sites.append(site)
-        print(len(sites))
         shuffle(sites)
     else:
         sites = None
@@ -108,21 +125,24 @@ def quiz(difficulty):
     return render_template(
         "quiz.html",
         question=question,
-        stats=session["quiz"] if "quiz" in session else {"total": 0, "correct": 0},
+        stats=session["quiz"][difficulty] if "quiz" in session else {"total": 0, "correct": 0},
         difficulty=difficulty,
-        choices=sites
+        choices=sites,
+        infohidden="hide" in request.cookies
     )
 
 
-@app.route("/api/quiz/<int:id>/<string:guess>", methods=["POST"])
-def quiz_api(id, guess):
+@app.route("/api/quiz/<int:id>/<string:guess>/<string:difficulty>", methods=["POST"])
+def quiz_api(id, guess, difficulty):
+    if difficulty not in ["easy", "hard"]:
+        return abort(404)
     if "quiz" not in session:
-        session["quiz"] = {"total": 0, "correct": 0}
-    session["quiz"]["total"] += 1
+        session["quiz"] = {"easy": {"total": 0, "correct": 0}, "hard": {"total": 0, "correct": 0}}
+    session["quiz"][difficulty]["total"] += 1
     query = Question.select(Site).join(Site).where(Question.id == id).get()
     if guess == query.site.url:
         correct = True
-        session["quiz"]["correct"] += 1
+        session["quiz"][difficulty]["correct"] += 1
     else:
         correct = False
     return jsonify({"site": model_to_dict(query)["site"], "correct": correct})

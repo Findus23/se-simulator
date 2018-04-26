@@ -10,3 +10,4 @@ config.py
 
 web/static/css/
 !web/static/css/.gitkeep
+count.txt

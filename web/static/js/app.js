@@ -31,6 +31,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
     var header = document.getElementsByClassName("siteheader")[0];
     var next = document.getElementById("next");
     var choices = document.getElementById("quizchoices");
+    var info = document.getElementById("infowrapper");
+    var close = document.getElementById("closeinfo");
     var selectedSite, headerimg, headertitle, entered;
 
     function toast(type, message) {
@@ -55,12 +57,15 @@ document.addEventListener("DOMContentLoaded", function (event) {
             input.disabled = true;
             check.disabled = true;
         } else {
-            [].forEach.call(choices.childNodes, function (child) {
+            [].forEach.call(choices.children, function (child) {
+                if (selection.url === child.dataset.url) {
+                    child.classList.add("selection")
+                }
                 child.disabled = true;
             });
         }
         var request = new XMLHttpRequest();
-        request.open("POST", "/api/quiz/" + id + "/" + selection.url, true);
+        request.open("POST", "/api/quiz/" + id + "/" + selection.url + "/" + (input ? "hard" : "easy"), true);
 
         request.onload = function () {
             if (this.status >= 200 && this.status < 400) {
@@ -178,12 +183,19 @@ document.addEventListener("DOMContentLoaded", function (event) {
     }
     if (next) {
         next.addEventListener("click", function () {
-            window.location.reload(true);
+            window.location.reload(false);
         });
         next.addEventListener("click", function (event) {
             if (event.keyCode === 13) {
-                window.location.reload(true);
+                window.location.reload(false);
             }
         });
     }
+    close.addEventListener("click", function (ev) {
+        info.style.display = "none";
+        document.cookie = "hide = 1;secure";
+    });
+    document.getElementById("showdisclaimer").addEventListener("click", function (ev) {
+        info.style.display = "block"
+    })
 });

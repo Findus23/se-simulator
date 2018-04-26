@@ -2,12 +2,39 @@
 {% block title %}
     Stackexchange Simulator Quiz - {{ question.title.text }}
 {% endblock %}
+{% block extraclasses %}quiz{% endblock %}
 {% block body %}
 
     <header>
         <h1>Stackexchange Simulator Quiz</h1>
     </header>
 
+    {% if stats.correct <3 %}
+        <div class="tutorial">
+            <h3>Tutorial:</h3>
+            <p>Guess which of the Stack Exchange sites this question could belong to.</p>
+            {% if difficulty=="easy" %}
+                <p>There are four possible answers below.</p>
+                <p>Press <strong>Next</strong> to get to the next Question.</p>
+                <p>
+                    If you think this is too easy, you can try out
+                    <a href="{{ url_for("quiz",difficulty="hard") }}">the hard quiz</a>
+                    which doesn't have possible answers.
+                </p>
+            {% else %}
+                <p>
+                    Then enter your guess into the textbox below, select the website
+                    and click on <strong>check</strong> to confirm your guess.
+                </p>
+                <p>Alternativly you can select a site with the arrow keys and press enter twice to confirm it.</p>
+                <p>
+                    If you think this is too hard, you can try out
+                    <a href="{{ url_for("quiz",difficulty="easy") }}">the easy quiz</a>
+                    which does have possible answers to choose from.
+                </p>
+            {% endif %}
+        </div>
+    {% endif %}
 
     {% if difficulty=="easy" %}
         <div id="quizchoices" data-id="{{ question.id }}">

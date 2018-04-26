@@ -12,7 +12,7 @@ site_colors = {
     "math.stackexchange.com": {"fg": "0f3559", "bg": "ffffff", "primary": "cb181f"},
     "diy.stackexchange.com": {"fg": "ffffff", "bg": "5588b9", "primary": "5588b9"},
     "gis.stackexchange.com": {"fg": "748a95", "bg": "f2e8d0", "primary": "f2e8d0"},
-    "tex.stackexchange.com": {"fg": "c14748", "bg": "6b8087", "primary": "6b8087"},
+    "tex.stackexchange.com": {"fg": "c14748", "bg": "fefef6", "primary": "c14748"},
     "askubuntu.com": {"fg": "ffffff", "bg": "de4508", "primary": "de4508"},
     "english.stackexchange.com": {"fg": "382f2a", "bg": "f4e3c8", "primary": "f4e3c8"},
     "unix.stackexchange.com": {"fg": "ffffff", "bg": "293a5d", "primary": "293a5d"},
