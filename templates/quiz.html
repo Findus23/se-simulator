@@ -20,8 +20,8 @@
         </div>
     {% else %}
         <div id="quizselector">
-            <input title="guess the correct site" id="siteselector" data-mode="quiz" data-id="{{ question.id }}"
-                   autocomplete='off'>
+            <input title="guess the correct site" id="siteselector" data-mode="quiz"
+                   data-id="{{ question.id }}" data-matomo-unmask autocomplete='off'>
             <button id="check">Check</button>
         </div>
     {% endif %}

@@ -5,7 +5,7 @@
 
     <div class="filterwrapper">
         <label class="label-inline" for="siteselector">Seite</label>
-        <input id="siteselector" class="awesomplete" value="{{ site.url if not site.fallback }}" data-mode="filter"/>
+        <input  id="siteselector" class="awesomplete" value="{{ site.url if not site.fallback }}" data-mode="filter" data-matomo-unmask/>
     </div>
     {% if not site.fallback %}
 
