@@ -24,7 +24,7 @@ def html2text(body):
     soup = BeautifulSoup(body, "lxml")
     for code in soup.find_all("code"):
         code.decompose()
-    return soup.get_text()
+    return str(soup.get_text())
 
 
 def get_files():
