@@ -14,6 +14,7 @@
     <script type="text/javascript">
         var _paq = _paq || [];
         {# tracker methods like "setCustomDimension" should be called before "trackPageView" #}
+        _paq.push(['enableHeartBeatTimer']);
         _paq.push(['trackPageView']);
         _paq.push(['enableLinkTracking']);
         (function () {
@@ -40,7 +41,7 @@
     {% block body %}{% endblock %}
     <footer>
         <div><a href="https://lw1.at/i">Imprint and Privacy Policy</a></div>
-        <div ><a href="#" id="showdisclaimer">Disclaimer</a></div>
+        <div><a href="#" id="showdisclaimer">Disclaimer</a></div>
         <div><a href="https://lw1.at/" target="_blank">About me and other projects</a></div>
     </footer>
 </div>
