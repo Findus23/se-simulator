@@ -6,7 +6,7 @@
     <div id="filterwrapper"
          style="background-color: {{ site.background_color }}; color: {{ site.foreground_color }}">
         <input id="siteselector" class="awesomplete" value="{{ site.url if not site.fallback }}"
-               data-mode="filter" title="filter by page" placeholder="filter by page"
+               data-mode="filter" title="filter by page" placeholder="filter by site"
                style="" type="search" data-matomo-unmask/>
         {% if not site.fallback %}
             <a href="{{ url_for("index") }}" class="clear"><span>Clear</span></a>
