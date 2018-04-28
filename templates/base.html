@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="de" class="{% block extraclasses %}{% endblock %}">
+<html lang="de" class="{% block extraclasses %}{% endblock %}" prefix="og: http://ogp.me/ns#">
 <head>
     <meta name="robots" content="noindex, nofollow">
-    <title>{% block title %}Stackexchange Simulator{% endblock %}</title>
+    <title>{% block title %}Stack Exchange Simulator{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% if config['DEBUG'] %}
         <link href="{{ url_for('static', filename='css/style.scss.css') }}" rel="stylesheet" type="text/css">
@@ -10,6 +10,13 @@
         <link href="{{ url_for('static', filename='css/style.css') }}?hash={{ git_hash }}"
               rel="stylesheet" type="text/css">
     {% endif %}
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="Stack Exchange Simulator" />
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@lw1_at"/>
+    <meta name="twitter:creator" content="@lw1_at"/>
+    <meta property="og:url" content="{{ request.base_url }}"/>
+    {% block extrameta %}{% endblock %}
     <!-- Matomo -->
     <script type="text/javascript">
         var _paq = _paq || [];

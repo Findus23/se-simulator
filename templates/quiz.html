@@ -1,12 +1,20 @@
 {% extends "base.html" %}
 {% block title %}
-    Stackexchange Simulator Quiz - {{ question.title.text }}
+    Stack Exchange Simulator Quiz - {{ question.title.text }}
+{% endblock %}
+{% block extrameta %}
+    <meta property="og:image" name="twitter:image" itemprop="image primaryImageOfPage"
+          content="{{ url_for("image",_external=True) }}"/>
+    <meta name="twitter:domain" content="se-simulator.lw1.at"/>
+    <meta name="twitter:title" property="og:title" itemprop="title name" content="Stack Exchange Simulator Quiz"/>
+    <meta name="twitter:description" property="og:description" itemprop="description"
+          content="Generating fun Stack Overflow and Stack Exchange Questions using Markov Chains">
 {% endblock %}
 {% block extraclasses %}quiz{% endblock %}
 {% block body %}
 
     <header>
-        <h1>Stackexchange Simulator Quiz</h1>
+        <h1>Stack Exchange Simulator Quiz</h1>
     </header>
 
     {% if stats.correct <3 %}

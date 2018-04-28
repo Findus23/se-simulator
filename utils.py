@@ -111,6 +111,7 @@ AS ci_lower_bound
 
 def get_fallback_site():
     return {
+        "id": None,
         "name": "Stack Exchange",
         "url": "stackexchange.com/",
         "icon_url": "https://cdn.sstatic.net/Sites/stackexchange/img/apple-touch-icon.png",
