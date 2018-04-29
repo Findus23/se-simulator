@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import random
 from datetime import datetime
 
@@ -65,7 +68,7 @@ def add_question(site, count=100):
             answer.save()
 
 
-if __name__ == "__main__":
+def main():
     if len(sys.argv) > 1:
         sites = sys.argv[1:]
         query = Site.select().where((Site.last_download.is_null(False)) & (Site.url.in_(sites)))
@@ -79,3 +82,8 @@ if __name__ == "__main__":
         add_title(s)
         add_answer(s)
         add_question(s)
+
+
+if __name__ == "__main__":
+    main()
+

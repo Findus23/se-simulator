@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import subprocess
 import time
 from io import BytesIO
@@ -18,6 +21,7 @@ import config
 import utils
 from app import app
 from models import *
+
 
 app.jinja_env.globals.update(prettydate=utils.prettydate)
 app.jinja_env.globals.update(is_light_color=utils.is_light_color)
@@ -240,18 +244,16 @@ def ratelimit_handler(e):
     return make_response(jsonify(error="access denied"), 403)
 
 
-if __name__ == '__main__':
+def main():
     import logging
 
     logger = logging.getLogger('peewee')
     logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler())
 
-
     @app.route('/static/js/<path:path>')
     def send_js(path):
         return send_from_directory('web/static/js', path)
-
 
     app.debug = True
     app.wsgi_app = SassMiddleware(app.wsgi_app, manifests={
@@ -259,6 +261,9 @@ if __name__ == '__main__':
     })
     app.run()
 
+
+if __name__ == '__main__':
+    main()
 else:
     css, sourcemap = sass.compile(
         filename='web/static/sass/style.scss',
@@ -269,3 +274,4 @@ else:
         style_css.write(css)
     with open('web/static/css/style.css.map', 'w') as style_css_map:
         style_css_map.write(sourcemap)
+
