@@ -1,5 +1,16 @@
 {% extends "base.html" %}
 {% from 'macros.html' import pagination, siteheader %}
+{% block extrameta %}
+    <meta property="og:image" name="twitter:image" itemprop="image primaryImageOfPage"
+          content="{{ url_for("image",site_id=site.id,_external=True) }}"/>
+    <meta name="twitter:domain" content="se-simulator.lw1.at"/>
+    <meta name="twitter:title" property="og:title" itemprop="title name" content="Stack Exchange Simulator"/>
+    <meta name="twitter:description" property="og:description" itemprop="description"
+          content="Generating fun Stack Overflow and Stack Exchange Questions using Markov Chains">
+    {% if site.background_color %}
+        <meta name="theme-color" content="{{ site.background_color }}">
+    {% endif %}
+{% endblock %}
 {% block body %}
     {{ siteheader(site) }}
 

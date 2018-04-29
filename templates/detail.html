@@ -1,7 +1,17 @@
 {% extends "base.html" %}
 {% from 'macros.html' import siteheader %}
 {% block title %}
-    {{ question.title.text }} - Stackexchange Simulator
+    {{ question.title.text }} - Stack Exchange Simulator
+{% endblock %}
+{% block extrameta %}
+    <meta property="og:image" name="twitter:image" itemprop="image primaryImageOfPage"
+          content="{{ url_for("image",site_id=question.site.id,_external=True) }}"/>
+    <meta name="twitter:domain" content="se-simulator.lw1.at"/>
+    <meta name="twitter:title" property="og:title" itemprop="title name" content="{{ question.title.text }}"/>
+    <meta name="twitter:description" property="og:description" itemprop="description"
+          content="{{ question.text|truncate(200, False, ' …', 10) }}">
+
+    <meta name="theme-color" content="{{ question.site.background_color }}">
 {% endblock %}
 {% block body %}
     {{ siteheader(question.site) }}

@@ -1,10 +1,12 @@
 import subprocess
 import time
+from io import BytesIO
 from random import shuffle, randint
 
 import sass
+from PIL import ImageFont, Image, ImageDraw
 from flask import render_template, send_from_directory, abort, session, jsonify, make_response, redirect, url_for, \
-    request
+    request, send_file
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_session import Session
@@ -157,9 +159,39 @@ def sites():
     return jsonify(data)
 
 
-@app.route('/test')
-def sdfdsfds():
-    return ""
+@app.route('/image')
+@app.route('/image/<int:site_id>')
+@limiter.limit("10 per minute")
+def image(site_id=None):
+    if site_id:
+        query = Site.select().where((Site.last_download.is_null(False)) & (Site.id == site_id))
+        site = get_object_or_404(query)
+    else:
+        class DummySite(object):
+            pass
+
+        site = DummySite()
+        site.foreground_color = 'black'
+        site.background_color = 'white'
+    # parameters
+    text = "Stack Exchange\nSimulator"
+    selected_font = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+    font_size = 70
+    W, H = (600, 600)
+    # # get the size of the text
+    img = Image.new('RGBA', (W, H), (site.background_color if site.background_color else "white"))
+    font = ImageFont.truetype(selected_font, font_size)
+    draw = ImageDraw.Draw(img)
+    w, h = draw.multiline_textsize(text, font)
+
+    draw.multiline_text(((W - w) / 2, (H - h) / 2), text,
+                        font=font, align="center",
+                        fill=(site.foreground_color if site.foreground_color else "black"))
+
+    byte_io = BytesIO()
+    img.save(byte_io, 'PNG', optimize=True)
+    byte_io.seek(0)
+    return send_file(byte_io, mimetype='image/png')
 
 
 @app.route('/api/vote/<string:type>/<int:id>/<string:vote>', methods=["POST"])

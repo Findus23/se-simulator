@@ -36,8 +36,8 @@ class User(BaseModel):
 
 class Question(BaseModel):
     text = TextField()
-    upvotes = IntegerField(default=0)
-    downvotes = IntegerField(default=0)
+    upvotes = IntegerField(default=1)
+    downvotes = IntegerField(default=1)
     title = ForeignKeyField(Title)
     user = ForeignKeyField(User)
     site = ForeignKeyField(Site)
@@ -47,8 +47,8 @@ class Question(BaseModel):
 
 class Answer(BaseModel):
     text = TextField()
-    upvotes = IntegerField(default=0)
-    downvotes = IntegerField(default=0)
+    upvotes = IntegerField(default=1)
+    downvotes = IntegerField(default=1)
     datetime = DateTimeField()
     question = ForeignKeyField(Question, null=True)
     user = ForeignKeyField(User)
