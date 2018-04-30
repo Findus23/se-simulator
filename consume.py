@@ -1,19 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import datetime
 import glob
+import models
 import os
+import parsexml
 import shutil
 import subprocess
-from datetime import datetime
-
-from models import *
-from parsexml import parse_posts, parse_comments, parse_usernames
-from utils import *
+import utils
 
 
 def main():
-    files = get_files()
+    files = utils.get_files()
 
     # TODO: name sites/id after real url
 
@@ -26,22 +25,22 @@ def main():
             print("{file} doesn't exist on archive.org".format(file=file))
             continue
         meta = files[filename]
-        sha1 = file_hash(file)
+        sha1 = utils.file_hash(file)
         if sha1 != meta["sha1"]:
             print("{file}: hashes don't match".format(file=filename))
             continue
-        alias = Alias.select().where(Alias.url == code)
+        alias = models.Alias.select().where(models.Alias.url == code)
         if len(alias) != 0:
             site_id = alias[0].site_id
             print(site_id)
-            site = Site.select().where(Site.id == site_id)[0]
+            site = models.Site.select().where(models.Site.id == site_id)[0]
         else:
-            db_element = Site().select().where(Site.url == code)
+            db_element = models.Site().select().where(models.Site.url == code)
             if len(db_element) == 0:
                 print("{site} not found in database".format(site=code))
                 continue
             site = db_element[0]
-        mtime = datetime.fromtimestamp(int(meta["mtime"]))
+        mtime = datetime.datetime.fromtimestamp(int(meta["mtime"]))
         if site.last_download == mtime:
             print("{site} is up to date".format(site=filename))
             continue
@@ -62,9 +61,9 @@ def main():
         subprocess.check_output(["7z", "x", "-aoa", code + ".7z"])
         os.chdir(currentdir)
         print("Start parsing")
-        parse_posts(rawdir, rawdir)
-        parse_comments(rawdir, rawdir)
-        parse_usernames(rawdir, rawdir)
+        parsexml.parse_posts(rawdir, rawdir)
+        parsexml.parse_comments(rawdir, rawdir)
+        parsexml.parse_usernames(rawdir, rawdir)
         print("DONE")
 
 

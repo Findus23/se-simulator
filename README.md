@@ -16,6 +16,15 @@ sudo apt-get install p7zip-full
 
 ### Setup
 
+- git clone with submodules
+
+```bash
+git clone https://github.com/Findus23/se-simulator
+cd se-simulator
+git submodule init
+git submodule update
+```
+
 - `pip install -r requirements.txt`
 - create a MySQL database called `se-simulator`
 

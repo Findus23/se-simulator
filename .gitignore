@@ -1,10 +1,13 @@
 .idea/
+*.sw[opa]
 
 sites
 
 /raw
 /downloads
 /chains
+
+/flask_session
 
 word-rnn-tensorflow/
 __pycache__/
@@ -17,5 +20,7 @@ count.txt
 
 # Python virtualenv dirs
 /venv
-/ven3
+/venv3
+
+*.pyc
 

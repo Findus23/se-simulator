@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import utils
-from models import *
+
+from models import Question
+from peewee import SQL
 from extra_data import site_colors
 
 

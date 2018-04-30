@@ -1,4 +1,11 @@
-from peewee import *
+# -*- coding: utf-8 -*-
+
+from peewee import BooleanField
+from peewee import CharField
+from peewee import DateTimeField
+from peewee import ForeignKeyField
+from peewee import IntegerField
+from peewee import TextField
 
 from basemodel import BaseModel
 
@@ -53,3 +60,4 @@ class Answer(BaseModel):
     question = ForeignKeyField(Question, null=True)
     user = ForeignKeyField(User)
     site = ForeignKeyField(Site)
+

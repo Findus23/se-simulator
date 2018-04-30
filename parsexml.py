@@ -1,13 +1,14 @@
-import jsonlines
-from lxml import etree
+# -*- coding: utf-8 -*-
 
-from utils import *
+import jsonlines
+import lxml
+import utils
 
 
 def parse_posts(inputdir, outputdir):
     i = 0
     skipped = 0
-    iterator = etree.iterparse(inputdir + "/Posts.xml", events=("start", "end"))
+    iterator = lxml.etree.iterparse(inputdir + "/Posts.xml", events=("start", "end"))
     _, root = next(iterator)
     with jsonlines.open(outputdir + '/Questions.jsonl', mode="w") as questions, \
             jsonlines.open(outputdir + '/Answers.jsonl', mode="w") as answers, \
@@ -22,7 +23,7 @@ def parse_posts(inputdir, outputdir):
                 titles.write(title)
             body = element.get('Body')
             if body:
-                text = html2text(body)
+                text = utils.html2text(body)
                 if element.get('PostTypeId') == "1":
                     questions.write(text)
                 else:
@@ -30,14 +31,14 @@ def parse_posts(inputdir, outputdir):
             element.clear()
             if i % 100 == 0:
                 root.clear()
-                print(i, skipped, i + skipped, end="\r")
+                print('i=%s, skipped=%s, i+skipped=%s' % (i, skipped, i + skipped))
             i += 1
-    print_stats(i, skipped)
+    utils.print_stats(i, skipped)
 
 
 def parse_comments(inputdir, outputdir):
     i = 0
-    iterator = etree.iterparse(inputdir + "/Comments.xml", events=("start", "end"))
+    iterator = lxml.etree.iterparse(inputdir + "/Comments.xml", events=("start", "end"))
     _, root = next(iterator)
     with jsonlines.open(outputdir + '/Comments.jsonl', mode="w") as comments:
         for event, element in iterator:
@@ -47,14 +48,14 @@ def parse_comments(inputdir, outputdir):
             element.clear()
             if i % 100 == 0:
                 root.clear()
-                print(i, end="\r")
+                print('i=%s' % (i,))
             i += 1
-    print_stats(i)
+    utils.print_stats(i)
 
 
 def parse_usernames(inputdir, outputdir):
     i = 0
-    iterator = etree.iterparse(inputdir + "/Users.xml", events=("start", "end"))
+    iterator = lxml.etree.iterparse(inputdir + "/Users.xml", events=("start", "end"))
     _, root = next(iterator)
     with jsonlines.open(outputdir + '/Usernames.jsonl', mode="w") as usernames:
         for event, element in iterator:
@@ -64,13 +65,13 @@ def parse_usernames(inputdir, outputdir):
             element.clear()
             if i % 100 == 0:
                 root.clear()
-                print(i, end="\r")
+                print('i=%s' % (i,))
             i += 1
-    print_stats(i)
+    utils.print_stats(i)
 
 
 if __name__ == "__main__":
-    settings = get_settings(1)
+    settings = utils.get_settings(1)
     # parse_posts(settings)
     # parse_comments(settings)
     # parse_comments(settings)

@@ -2,11 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import html
-from urllib.parse import urlparse
-
 import requests
 
-from models import *
+from urllib.parse import urlparse
+
+from models import Alias
+from models import Answer
+from models import Question
+from models import Site
+from models import Title
+from models import User
 
 
 def main():
