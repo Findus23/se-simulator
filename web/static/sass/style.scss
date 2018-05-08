@@ -151,6 +151,7 @@ h2 {
 }
 
 #quizselector {
+  background-color: white;
   margin: 15px;
   display: flex;
   flex-direction: row;
@@ -194,6 +195,11 @@ button {
       opacity: 0.5;
     }
   }
+}
+
+#next, #check {
+  background-color: #f69c55;
+  color: white;
 }
 
 #check {
