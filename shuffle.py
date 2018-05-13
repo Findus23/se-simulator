@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import utils
 from models import *
 from extra_data import site_colors
