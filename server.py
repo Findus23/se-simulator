@@ -23,7 +23,7 @@ from models import *
 app.jinja_env.globals.update(prettydate=utils.prettydate)
 app.jinja_env.globals.update(is_light_color=utils.is_light_color)
 
-SESSION_TYPE = 'redis'
+SESSION_TYPE = config.session_type
 SESSION_COOKIE_SECURE = config.production
 SESSION_USE_SIGNER = True
 SESSION_KEY_PREFIX = "StackDataSessions:"
