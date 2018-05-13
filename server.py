@@ -42,11 +42,11 @@ question_count = utils.load_question_count()
 
 @app.context_processor
 def git_hash():
-    return dict(git_hash=subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode().strip())
+    return dict(git_hash=subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).decode().strip())
 
 
-@app.route('/')
-@app.route('/s/<string:site>')
+@app.route("/")
+@app.route("/s/<string:site>")
 def index(site=None):
     query = Question.select(Question, User, Site, Title, SQL(utils.rating_sql)).join(Site).switch(Question).join(
         User).switch(
@@ -62,7 +62,7 @@ def index(site=None):
     paginated_query = PaginatedQuery(query, paginate_by=10, check_bounds=True)
     pagearray = utils.create_pagination(paginated_query.get_page_count(), paginated_query.get_page())
     return render_template(
-        'list.html',
+        "list.html",
         pagearray=pagearray,
         num_pages=paginated_query.get_page_count(),
         page=paginated_query.get_page(),
@@ -73,7 +73,7 @@ def index(site=None):
     )
 
 
-@app.route('/q/<string:slug>')
+@app.route("/q/<string:slug>")
 def question(slug):
     query = Question.select(Question, Title, User, Site) \
         .join(Title).switch(Question) \
@@ -92,12 +92,12 @@ def question(slug):
     )
 
 
-@app.route('/quiz/')
+@app.route("/quiz/")
 def hello():
     return redirect(url_for("quiz", difficulty="easy"), code=302)
 
 
-@app.route('/quiz/<string:difficulty>')
+@app.route("/quiz/<string:difficulty>")
 def quiz(difficulty):
     if difficulty not in ["easy", "hard"]:
         return abort(404)
@@ -124,7 +124,7 @@ def quiz(difficulty):
     else:
         sites = None
     time2 = time.time()
-    print('{} ms'.format((time2 - time1) * 1000.0))
+    print("{} ms".format((time2 - time1) * 1000.0))
     return render_template(
         "quiz.html",
         question=question,
@@ -151,7 +151,7 @@ def quiz_api(id, guess, difficulty):
     return jsonify({"site": model_to_dict(query)["site"], "correct": correct})
 
 
-@app.route('/api/sites')
+@app.route("/api/sites")
 def sites():
     sites = Site.select().where(Site.last_download.is_null(False))
     data = {}
@@ -160,8 +160,8 @@ def sites():
     return jsonify(data)
 
 
-@app.route('/image')
-@app.route('/image/<int:site_id>')
+@app.route("/image")
+@app.route("/image/<int:site_id>")
 @limiter.limit("10 per minute")
 def image(site_id=None):
     if site_id:
@@ -172,15 +172,15 @@ def image(site_id=None):
             pass
 
         site = DummySite()
-        site.foreground_color = 'black'
-        site.background_color = 'white'
+        site.foreground_color = "black"
+        site.background_color = "white"
     # parameters
     text = "Stack Exchange\nSimulator"
     selected_font = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
     font_size = 70
     W, H = (600, 600)
     # # get the size of the text
-    img = Image.new('RGBA', (W, H), (site.background_color if site.background_color else "white"))
+    img = Image.new("RGBA", (W, H), (site.background_color if site.background_color else "white"))
     font = ImageFont.truetype(selected_font, font_size)
     draw = ImageDraw.Draw(img)
     w, h = draw.multiline_textsize(text, font)
@@ -190,12 +190,12 @@ def image(site_id=None):
                         fill=(site.foreground_color if site.foreground_color else "black"))
 
     byte_io = BytesIO()
-    img.save(byte_io, 'PNG', optimize=True)
+    img.save(byte_io, "PNG", optimize=True)
     byte_io.seek(0)
-    return send_file(byte_io, mimetype='image/png')
+    return send_file(byte_io, mimetype="image/png")
 
 
-@app.route('/api/vote/<string:type>/<int:id>/<string:vote>', methods=["POST"])
+@app.route("/api/vote/<string:type>/<int:id>/<string:vote>", methods=["POST"])
 @limiter.limit("10 per minute")
 def vote(type, id, vote):
     if "voted" not in session:
@@ -241,32 +241,32 @@ def ratelimit_handler(e):
     return make_response(jsonify(error="access denied"), 403)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import logging
 
-    logger = logging.getLogger('peewee')
+    logger = logging.getLogger("peewee")
     logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler())
 
 
-    @app.route('/static/js/<path:path>')
+    @app.route("/static/js/<path:path>")
     def send_js(path):
-        return send_from_directory('web/static/js', path)
+        return send_from_directory("web/static/js", path)
 
 
     app.debug = True
     app.wsgi_app = SassMiddleware(app.wsgi_app, manifests={
-        'web': ('static/sass', 'static/css', '/static/css')
+        "web": ("static/sass", "static/css", "/static/css")
     })
     app.run()
 
 else:
     css, sourcemap = sass.compile(
-        filename='web/static/sass/style.scss',
-        output_style='compressed',
-        source_map_filename='web/static/css/style.css.map'
+        filename="web/static/sass/style.scss",
+        output_style="compressed",
+        source_map_filename="web/static/css/style.css.map"
     )
-    with open('web/static/css/style.css', 'w') as style_css:
+    with open("web/static/css/style.css", "w") as style_css:
         style_css.write(css)
-    with open('web/static/css/style.css.map', 'w') as style_css_map:
+    with open("web/static/css/style.css.map", "w") as style_css_map:
         style_css_map.write(sourcemap)
