@@ -3,8 +3,27 @@ Generating fun Stack Exchange questions using Markov chains
 
 ### [try it out](http://se-simulator.lw1.at/)
 
+### Requirements
+
+- python 3.5+ (only tested with python 3.6)
+- 7z
+
+For Debian and similar distribution install with:
+
+```bash
+sudo apt-get install p7zip-full
+```
 
 ### Setup
+
+- git clone with submodules
+
+```bash
+git clone https://github.com/Findus23/se-simulator
+cd se-simulator
+git submodule init
+git submodule update
+```
 
 - `pip install -r requirements.txt`
 - create a MySQL database called `se-simulator`
@@ -12,7 +31,7 @@ Generating fun Stack Exchange questions using Markov chains
 - run `create.py`, which creates the database and fetches the list of SE sites
 - run `apply_colors.py` (which should run really quickly)
 - create folders called `chains`, `download` and `raw` (or syminks to somewhere where more disk space is left)
-- download the `.7z` files for the sites you want to generate (I'd recommend to use a file <100MB)
+- [download](https://archive.org/details/stackexchange] `.7z` files for the sites you want to generate (it's recommend to start with a file <100MB)
     - If the `.7z` has another name as the site has now, rename it
 - run `consume.py`
     - It should check the hash, move the file to `raw/`, unpack it and extract the needed content from the `.xml` files into new `.jsonl` files. It also writes the data of the file into the db, so it won't be imported again.
