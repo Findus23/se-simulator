@@ -1,17 +1,18 @@
-import os
+# -*- codin: utf-8 -*-
 
 import jsonlines
+import markov
 import markovify
-
-from markov import MarkovText, MarkovUserName
-from utils import *
+import os
+import random
+import utils
 
 
 def get_markov(mode):
     if mode == "Usernames":
-        return MarkovUserName
+        return markov.MarkovUserName
     else:
-        return MarkovText
+        return markov.MarkovText
 
 
 def get_state_size(mode):
@@ -53,7 +54,7 @@ def generate_chain(sourcedir, chainfile, mode):
     chain = markovify.combine([combined_cains, subtotal_chain])
     with open(chainfile, 'w') as outfile:
         outfile.write(chain.to_json())
-    print_ram()
+    utils.print_ram()
     return chain
 
 
@@ -86,7 +87,7 @@ def generate_text(chain: markovify.Text, model):
 
 
 if __name__ == "__main__":
-    basedir, mode = get_settings(2)
+    basedir, mode = utils.get_settings(2)
     if mode not in ["Questions", "Answers", "Titles", "Usernames"]:
         print("error")
         exit()
@@ -102,4 +103,4 @@ if __name__ == "__main__":
         print(chain.make_sentence())
         print("-----------------------------------")
 
-    print_ram()
+    utils.print_ram()

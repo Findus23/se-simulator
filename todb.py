@@ -1,12 +1,20 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import datetime
 import random
-from datetime import datetime
-
+import slugify
 import sys
-from slugify import slugify
-
+import text_generator
 import utils
-from models import *
-from text_generator import get_chain, generate_text
+
+from models import Alias
+from models import Answer
+from models import Question
+from models import Site
+from models import Title
+from models import User
+from peewee import JOIN
 
 
 def get_unused_users(site, count):
@@ -16,32 +24,32 @@ def get_unused_users(site, count):
 
 def add_username(site, count=500):
     print("usernames")
-    chain = get_chain(site.url, "Usernames")
+    chain = text_generator.get_chain(site.url, "Usernames")
     for _ in range(count):
-        username = generate_text(chain, "Usernames")
+        username = text_generator.generate_text(chain, "Usernames")
         User.create(username=username, site=site)
 
 
 def add_title(site, count=100):
     print("titles")
     # TODO: Make sure that every slug is unique
-    chain = get_chain(site.url, "Titles")
+    chain = text_generator.get_chain(site.url, "Titles")
     for _ in range(count):
-        title = generate_text(chain, "Titles")
-        slug = slugify(title, max_length=70, word_boundary=True)
+        title = text_generator.generate_text(chain, "Titles")
+        slug = slugify.slugify(title, max_length=70, word_boundary=True)
         Title.create(text=title, slug=slug, site=site)
 
 
 def add_answer(site, count=300):
     print("answers")
     users = get_unused_users(site, count)
-    chain = get_chain(site.url, "Answers")
+    chain = text_generator.get_chain(site.url, "Answers")
 
     for i in range(count):
-        text = generate_text(chain, "Answers")
+        text = text_generator.generate_text(chain, "Answers")
         user = users[i]
-        time = datetime.now()
-        Answer.create(text=text, user_id=user, site_id=site, datetime=time)
+        now = datetime.datetime.now()
+        Answer.create(text=text, user_id=user, site_id=site, datetime=now)
 
 
 def add_question(site, count=100):
@@ -50,14 +58,14 @@ def add_question(site, count=100):
     titles = Title.select().join(Question, JOIN.LEFT_OUTER) \
         .where((Title.site == site) & (Question.id.is_null())) \
         .limit(count)
-    chain = get_chain(site.url, "Questions")
+    chain = text_generator.get_chain(site.url, "Questions")
 
     for i in range(count):
-        text = generate_text(chain, "Questions")
+        text = text_generator.generate_text(chain, "Questions")
         title = titles[i]
         user = users[i]
-        time = datetime.now()
-        question = Question.create(text=text, title_id=title, user_id=user, site_id=site, datetime=time)
+        now = datetime.datetime.now()
+        question = Question.create(text=text, title_id=title, user_id=user, site_id=site, datetime=now)
         num_answers = random.randint(1, 4)
         answers = Answer.select().where((Answer.site == site) & (Answer.question.is_null())).limit(num_answers)
         for answer in answers:
@@ -65,7 +73,7 @@ def add_question(site, count=100):
             answer.save()
 
 
-if __name__ == "__main__":
+def main():
     if len(sys.argv) > 1:
         sites = sys.argv[1:]
         query = Site.select().where((Site.last_download.is_null(False)) & (Site.url.in_(sites)))
@@ -79,3 +87,8 @@ if __name__ == "__main__":
         add_title(s)
         add_answer(s)
         add_question(s)
+
+
+if __name__ == "__main__":
+    main()
+

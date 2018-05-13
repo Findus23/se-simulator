@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
+
+import datetime
 import hashlib
 import random
 import resource
 import string
 import sys
-from datetime import datetime
 
 from bs4 import BeautifulSoup
 from internetarchive import get_item
@@ -60,7 +62,7 @@ def get_random_string(length):
 
 
 def prettydate(d):
-    diff = datetime.now() - d
+    diff = datetime.datetime.now() - d
     s = diff.seconds
     if diff.days > 7 or diff.days < 0:
         return d.strftime('%d %b %y')

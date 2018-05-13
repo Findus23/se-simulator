@@ -1,9 +1,15 @@
-sites
-raw
-downloads
-chains
-word-rnn-tensorflow/
 .idea/
+*.sw[opa]
+
+sites
+
+/raw
+/downloads
+/chains
+
+/flask_session
+
+word-rnn-tensorflow/
 __pycache__/
 config.py
 *.old
@@ -11,3 +17,10 @@ config.py
 web/static/css/
 !web/static/css/.gitkeep
 count.txt
+
+# Python virtualenv dirs
+/venv
+/venv3
+
+*.pyc
+
