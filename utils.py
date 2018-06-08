@@ -35,8 +35,8 @@ def get_files():
 def file_hash(filename):
     """from https://stackoverflow.com/a/44873382/4398037"""
     h = hashlib.sha1()
-    with open(filename, 'rb', buffering=0) as f:
-        for b in iter(lambda: f.read(128 * 1024), b''):
+    with open(filename, "rb", buffering=0) as f:
+        for b in iter(lambda: f.read(128 * 1024), b""):
             h.update(b)
     return h.hexdigest()
 
@@ -56,30 +56,30 @@ def get_settings(count):
 
 
 def get_random_string(length):
-    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+    return "".join(random.choices(string.ascii_uppercase + string.digits, k=length))
 
 
 def prettydate(d):
     diff = datetime.now() - d
     s = diff.seconds
     if diff.days > 7 or diff.days < 0:
-        return d.strftime('%d %b %y')
+        return d.strftime("%d %b %y")
     elif diff.days == 1:
-        return '1 day ago'
+        return "1 day ago"
     elif diff.days > 1:
-        return '{} days ago'.format(diff.days)
+        return "{} days ago".format(diff.days)
     elif s <= 1:
-        return 'just now'
+        return "just now"
     elif s < 60:
-        return '{} seconds ago'.format(s)
+        return "{} seconds ago".format(s)
     elif s < 120:
-        return '1 minute ago'
+        return "1 minute ago"
     elif s < 3600:
-        return '{} minutes ago'.format(int(s / 60))
+        return "{} minutes ago".format(int(s / 60))
     elif s < 7200:
-        return '1 hour ago'
+        return "1 hour ago"
     else:
-        return '{} hours ago'.format(int(s / 3600))
+        return "{} hours ago".format(int(s / 3600))
 
 
 def create_pagination(num_pages, page, padding=2):
@@ -135,10 +135,10 @@ def is_light_color(hex):
 
 
 def save_question_count(count):
-    with open('count.txt', 'w') as f:
+    with open("count.txt", "w") as f:
         f.write(str(count))
 
 
 def load_question_count():
-    with open('count.txt', 'r') as f:
+    with open("count.txt", "r") as f:
         return int(f.readline())

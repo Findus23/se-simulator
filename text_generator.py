@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 
 import jsonlines
@@ -20,7 +21,7 @@ def get_state_size(mode):
 
 def load_chain(chainfile, mode):
     markov = get_markov(mode)
-    with open(chainfile, 'r') as myfile:
+    with open(chainfile, "r") as myfile:
         data = myfile.read()
         print("using existing file\n")
         return markov.from_json(data)
@@ -51,15 +52,15 @@ def generate_chain(sourcedir, chainfile, mode):
             i += 1
     subtotal_chain = markovify.combine(chainlist)
     chain = markovify.combine([combined_cains, subtotal_chain])
-    with open(chainfile, 'w') as outfile:
+    with open(chainfile, "w") as outfile:
         outfile.write(chain.to_json())
     print_ram()
     return chain
 
 
 def get_chain(url, mode):
-    sourcedir = 'raw/{url}'.format(url=url, type=mode)
-    chainfile = 'chains/{url}/{type}.chain.json'.format(url=url, type=mode)
+    sourcedir = "raw/{url}".format(url=url, type=mode)
+    chainfile = "chains/{url}/{type}.chain.json".format(url=url, type=mode)
     if os.path.exists(chainfile):
         return load_chain(chainfile, mode)
     else:

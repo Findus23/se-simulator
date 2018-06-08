@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from internetarchive import get_item, download
 
 from models import *

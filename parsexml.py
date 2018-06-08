@@ -9,21 +9,21 @@ def parse_posts(inputdir, outputdir):
     skipped = 0
     iterator = etree.iterparse(inputdir + "/Posts.xml", events=("start", "end"))
     _, root = next(iterator)
-    with jsonlines.open(outputdir + '/Questions.jsonl', mode="w") as questions, \
-            jsonlines.open(outputdir + '/Answers.jsonl', mode="w") as answers, \
+    with jsonlines.open(outputdir + "/Questions.jsonl", mode="w") as questions, \
+            jsonlines.open(outputdir + "/Answers.jsonl", mode="w") as answers, \
             jsonlines.open(outputdir + "/Titles.jsonl", "w") as titles:
         for event, element in iterator:
-            title = element.get('Title')
-            # if element.get('Score') and int(element.get('Score')) <= 10:
+            title = element.get("Title")
+            # if element.get("Score") and int(element.get("Score")) <= 10:
             #     skipped += 1
             #     element.clear()
             #     continue
             if title:
                 titles.write(title)
-            body = element.get('Body')
+            body = element.get("Body")
             if body:
                 text = html2text(body)
-                if element.get('PostTypeId') == "1":
+                if element.get("PostTypeId") == "1":
                     questions.write(text)
                 else:
                     answers.write(text)
@@ -39,9 +39,9 @@ def parse_comments(inputdir, outputdir):
     i = 0
     iterator = etree.iterparse(inputdir + "/Comments.xml", events=("start", "end"))
     _, root = next(iterator)
-    with jsonlines.open(outputdir + '/Comments.jsonl', mode="w") as comments:
+    with jsonlines.open(outputdir + "/Comments.jsonl", mode="w") as comments:
         for event, element in iterator:
-            text = element.get('Text')
+            text = element.get("Text")
             if text:
                 comments.write(text)
             element.clear()
@@ -56,9 +56,9 @@ def parse_usernames(inputdir, outputdir):
     i = 0
     iterator = etree.iterparse(inputdir + "/Users.xml", events=("start", "end"))
     _, root = next(iterator)
-    with jsonlines.open(outputdir + '/Usernames.jsonl', mode="w") as usernames:
+    with jsonlines.open(outputdir + "/Usernames.jsonl", mode="w") as usernames:
         for event, element in iterator:
-            displayname = element.get('DisplayName')
+            displayname = element.get("DisplayName")
             if displayname:
                 usernames.write(displayname)
             element.clear()
