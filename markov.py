@@ -1,5 +1,5 @@
 import markovify
-from nltk.tokenize.moses import MosesDetokenizer, MosesTokenizer
+from sacremoses import MosesDetokenizer, MosesTokenizer
 
 tokenizer = MosesTokenizer()
 detokenizer = MosesDetokenizer()
