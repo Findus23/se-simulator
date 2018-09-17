@@ -13,12 +13,16 @@ from flask_limiter.util import get_remote_address
 from flask_session import Session
 from playhouse.flask_utils import PaginatedQuery, get_object_or_404
 from playhouse.shortcuts import model_to_dict
+from raven.contrib.flask import Sentry
 from sassutils.wsgi import SassMiddleware
 
 import config
 import utils
 from app import app
 from models import *
+
+if config.sentryDSN:
+    sentry = Sentry(app, dsn=config.sentryDSN)
 
 app.jinja_env.globals.update(prettydate=utils.prettydate)
 app.jinja_env.globals.update(is_light_color=utils.is_light_color)
