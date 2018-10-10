@@ -28,6 +28,8 @@ app.jinja_env.globals.update(prettydate=utils.prettydate)
 app.jinja_env.globals.update(is_light_color=utils.is_light_color)
 
 SESSION_TYPE = config.session_type
+if config.session_type == "redis":
+    SESSION_REDIS = config.redis_instance
 SESSION_COOKIE_SECURE = config.production
 SESSION_USE_SIGNER = True
 SESSION_KEY_PREFIX = "StackDataSessions:"
