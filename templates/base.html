@@ -24,17 +24,18 @@
         var _paq = _paq || [];
         {# tracker methods like "setCustomDimension" should be called before "trackPageView" #}
         _paq.push(['enableHeartBeatTimer']);
+		_paq.push(['setRequestMethod', 'POST']);
         _paq.push(['trackPageView']);
         _paq.push(['enableLinkTracking']);
         (function () {
             var u = "https://matomo.lw1.at/";
-            _paq.push(['setTrackerUrl', u + 'piwik.php']);
+            _paq.push(['setTrackerUrl', u + 'statistics.php']);
             _paq.push(['setSiteId', '16']);
             var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
             g.type = 'text/javascript';
             g.async = true;
             g.defer = true;
-            g.src = u + 'piwik.js';
+            g.src = u + 'statistics.js';
             s.parentNode.insertBefore(g, s);
         })();
     </script>
