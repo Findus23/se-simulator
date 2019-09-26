@@ -33,11 +33,11 @@ Pillow==6.1.0
 pycparser==2.19
 PyMySQL==0.9.3
 python-slugify==3.0.4
-raven==6.10.0
 redis==3.3.8
 requests==2.22.0
 sacremoses==0.0.34
 schema==0.6.8
+sentry-sdk==0.12.2
 six==1.12.0
 soupsieve==1.8
 text-unidecode==1.3
