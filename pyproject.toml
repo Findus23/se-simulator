@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "stackdata"
+version = "0.1.0"
+description = ""
+authors = ["Lukas Winkler <git@lw1.at>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+Flask = "^1.1.1"
+Flask-Limiter = "^1.1.0"
+Flask-Session = "^0.3.1"
+gunicorn = "^20.0.4"
+libsass = "^0.19.4"
+Pillow = "^6.2.1"
+sentry-sdk = "^0.13.5"
+peewee = "^3.13.1"
+markovify = "^0.8.0"
+PyMySQL = "^0.9.3"
+
+[tool.poetry.dev-dependencies]
+jsonlines = "^1.2.0"
+lxml = "^4.4.2"
+requests = "^2.22.0"
+internetarchive = "^1.9.0"
+python-slugify = "^4.0.0"
+beautifulsoup4 = "^4.8.1"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
