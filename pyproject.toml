@@ -12,15 +12,15 @@ Flask-Session = "^0.3.1"
 gunicorn = "^20.0.4"
 libsass = "^0.20.0"
 Pillow = "^8.1.0"
-sentry-sdk = "^0.17.0"
+sentry-sdk = {extras = ["flask"], version = "^0.19.5"}
 peewee = "^3.13.1"
 markovify = "^0.8.0"
-PyMySQL = "^0.10.0"
+PyMySQL = "^1.0.0"
 redis = "^3.5.3"
 setproctitle = "^1.2.1"
 
 [tool.poetry.dev-dependencies]
-jsonlines = "^1.2.0"
+jsonlines = "^2.0.0"
 lxml = "^4.4.2"
 requests = "^2.22.0"
 internetarchive = "^1.9.0"
