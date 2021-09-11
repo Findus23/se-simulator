@@ -56,7 +56,10 @@ def index(site=None):
         Title)
     if site:
         query = query.where(Site.url == site)
-        site_element = Site.select().where(Site.url == site).get()
+        try:
+            site_element = Site.select().where(Site.url == site).get()
+        except DoesNotExist:
+            abort(404)
     else:
         site_element = utils.get_fallback_site()
     query = query.order_by(SQL("ci_lower_bound DESC, random"))
