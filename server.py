@@ -204,6 +204,7 @@ def image(site_id=None):
 @app.route("/api/vote/<string:type>/<int:id>/<string:vote>", methods=["POST"])
 @limiter.limit("10 per minute")
 def vote(type, id, vote):
+    abort(403)  # remove voting completely to not change historical data anymore
     if "voted" not in session:
         session["voted"] = {}
     print(session["voted"])
