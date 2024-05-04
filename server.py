@@ -34,7 +34,7 @@ app.secret_key = config.secret_key
 Session(app)
 
 limiter = Limiter(
-    app,
+    app=app,
     key_func=get_remote_address,
     headers_enabled=True
 )
