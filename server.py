@@ -189,7 +189,8 @@ def image(site_id=None):
     img = Image.new("RGBA", (W, H), (site.background_color if site.background_color else "white"))
     font = ImageFont.truetype(selected_font, font_size)
     draw = ImageDraw.Draw(img)
-    w, h = draw.multiline_textsize(text, font)
+    left, top, right, bottom = draw.multiline_textbbox((0, 0), text, font)
+    w, h = right - left, bottom - top
 
     draw.multiline_text(((W - w) / 2, (H - h) / 2), text,
                         font=font, align="center",
