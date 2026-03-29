@@ -36,10 +36,6 @@ app.secret_key = config.secret_key
 question_count = utils.load_question_count()
 
 
-@app.context_processor
-def git_hash():
-    return dict(git_hash=subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).decode().strip())
-
 
 @app.route("/")
 @app.route("/s/<string:site>")
