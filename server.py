@@ -104,7 +104,6 @@ def quiz(difficulty):
     time1 = time.time()
     while True:
         random = randint(0, question_count - 1)
-        print(random)
         try:
             question = Question.select(Question, Title, User, Site) \
                 .join(Title).switch(Question) \
@@ -124,7 +123,6 @@ def quiz(difficulty):
     else:
         sites = None
     time2 = time.time()
-    print("{} ms".format((time2 - time1) * 1000.0))
     return render_template(
         "quiz.html",
         question=question,
@@ -236,7 +234,7 @@ if __name__ == "__main__":
     import logging
 
     logger = logging.getLogger("peewee")
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.WARN)
     logger.addHandler(logging.StreamHandler())
 
 
