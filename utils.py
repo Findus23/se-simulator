@@ -5,8 +5,6 @@ import string
 import sys
 from datetime import datetime
 
-from bs4 import BeautifulSoup
-from internetarchive import get_item
 
 
 def print_stats(i, skipped=None):
@@ -21,6 +19,7 @@ def print_ram():
 
 
 def html2text(body):
+    from bs4 import BeautifulSoup
     soup = BeautifulSoup(body, "lxml")
     for code in soup.find_all("code"):
         code.decompose()
@@ -28,6 +27,7 @@ def html2text(body):
 
 
 def get_files():
+    from internetarchive import get_item
     ia = get_item("stackexchange")
     return {x["name"]: x for x in ia.files}
 

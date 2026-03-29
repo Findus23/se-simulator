@@ -2,42 +2,36 @@
 import subprocess
 import time
 from io import BytesIO
-from random import shuffle, randint
+from random import randint, shuffle
 
-import sass
-from PIL import ImageFont, Image, ImageDraw
-from flask import render_template, send_from_directory, abort, session, jsonify, make_response, redirect, url_for, \
-    request, send_file
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
-from flask_session import Session
+from flask import (
+    abort,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    send_file,
+    send_from_directory,
+    session,
+    url_for,
+)
+from peewee import SQL, DoesNotExist
+from PIL import Image, ImageDraw, ImageFont
 from playhouse.flask_utils import PaginatedQuery, get_object_or_404
 from playhouse.shortcuts import model_to_dict
-from sassutils.wsgi import SassMiddleware
 
 import config
 import utils
 from app import app
-from models import *
+from models import Answer, Question, Site, Title, User
 
 app.jinja_env.globals.update(prettydate=utils.prettydate)
 app.jinja_env.globals.update(is_light_color=utils.is_light_color)
 
-SESSION_TYPE = config.session_type
-if config.session_type == "redis":
-    SESSION_REDIS = config.redis_instance
 SESSION_COOKIE_SECURE = config.production
-SESSION_USE_SIGNER = True
-SESSION_KEY_PREFIX = "StackDataSessions:"
 app.config.from_object(__name__)
 app.secret_key = config.secret_key
-Session(app)
 
-limiter = Limiter(
-    app=app,
-    key_func=get_remote_address,
-    headers_enabled=True
-)
 
 question_count = utils.load_question_count()
 
@@ -74,7 +68,7 @@ def index(site=None):
         page=paginated_query.get_page(),
         questions=paginated_query.get_object_list(),
         site=site_element,
-        voted=session["voted"] if "voted" in session and not config.make_cacheable else None,
+        voted=False,
         infohidden="hide" in request.cookies
     )
 
@@ -93,7 +87,7 @@ def question(slug):
         "detail.html",
         question=question,
         answers=answers,
-        voted=session["voted"] if "voted" in session and not config.make_cacheable else None,
+        voted=False,
         infohidden="hide" in request.cookies
     )
 
@@ -168,7 +162,6 @@ def sites():
 
 @app.route("/image")
 @app.route("/image/<int:site_id>")
-@limiter.limit("10 per minute")
 def image(site_id=None):
     if site_id:
         query = Site.select().where((Site.last_download.is_null(False)) & (Site.id == site_id))
@@ -203,7 +196,6 @@ def image(site_id=None):
 
 
 @app.route("/api/vote/<string:type>/<int:id>/<string:vote>", methods=["POST"])
-@limiter.limit("10 per minute")
 def vote(type, id, vote):
     abort(403)  # remove voting completely to not change historical data anymore
     if "voted" not in session:
@@ -239,16 +231,6 @@ def vote(type, id, vote):
     })
 
 
-@app.errorhandler(429)
-def ratelimit_handler(e):
-    return make_response(jsonify(error="ratelimit exceeded {}".format(e.description)), 429)
-
-
-@app.errorhandler(403)
-def ratelimit_handler(e):
-    return make_response(jsonify(error="access denied"), 403)
-
-
 if __name__ == "__main__":
     import logging
 
@@ -263,18 +245,18 @@ if __name__ == "__main__":
 
 
     app.debug = True
-    app.wsgi_app = SassMiddleware(app.wsgi_app, manifests={
-        "web": ("static/sass", "static/css", "/static/css")
-    })
+    # app.wsgi_app = SassMiddleware(app.wsgi_app, manifests={
+    #     "web": ("static/sass", "static/css", "/static/css")
+    # })
     app.run()
 
-else:
-    css, sourcemap = sass.compile(
-        filename="web/static/sass/style.scss",
-        output_style="compressed",
-        source_map_filename="web/static/css/style.css.map"
-    )
-    with open("web/static/css/style.css", "w") as style_css:
-        style_css.write(css)
-    with open("web/static/css/style.css.map", "w") as style_css_map:
-        style_css_map.write(sourcemap)
+# else:
+    # css, sourcemap = sass.compile(
+    #     filename="web/static/sass/style.scss",
+    #     output_style="compressed",
+    #     source_map_filename="web/static/css/style.css.map"
+    # )
+    # with open("web/static/css/style.css", "w") as style_css:
+    #     style_css.write(css)
+    # with open("web/static/css/style.css.map", "w") as style_css_map:
+    #     style_css_map.write(sourcemap)

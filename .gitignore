@@ -8,6 +8,3 @@ __pycache__/
 config.py
 *.old
 
-web/static/css/
-!web/static/css/.gitkeep
-count.txt
