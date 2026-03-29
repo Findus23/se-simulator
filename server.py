@@ -148,6 +148,7 @@ def quiz_api(id, guess, difficulty):
         session["quiz"][difficulty]["correct"] += 1
     else:
         correct = False
+    session.modified = True
     return jsonify({"site": model_to_dict(query)["site"], "correct": correct})
 
 
